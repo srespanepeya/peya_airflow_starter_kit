@@ -35,7 +35,7 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
         task_id="getDataTalonService",
         ssh_conn_id='ssh_hadoop_datanode1',
         bash_command="""
-        echo 'test'
+        ssh /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
         """,
         dag=dag)
     )
