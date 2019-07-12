@@ -41,7 +41,7 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
         /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
         """,
         timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1"
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
     # Mensaje OK
