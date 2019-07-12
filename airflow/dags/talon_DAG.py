@@ -12,7 +12,7 @@ from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.contrib.hooks import SSHHook
 
 
-sshHook = SSHHook(conn_id="ssh_hadoop_datanode1")
+#sshHook = SSHHook(conn_id="ssh_hadoop_datanode1")
 
 # Params DAG
 default_args = {
