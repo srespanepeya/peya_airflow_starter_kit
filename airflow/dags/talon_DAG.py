@@ -9,6 +9,10 @@ from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 from airflow.contrib.operators.ssh_operator import SSHOperator
+from airflow.contrib.hooks import SSHHook
+
+
+sshHook = SSHHook(conn_id="ssh_hadoop_datanode1")
 
 # Params DAG
 default_args = {
@@ -31,13 +35,12 @@ def validate():
 
 with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
-    getDataTalonService = SSHOperator(
+    getDataTalonService = SSHExecuteOperator(
         task_id="getDataTalonService",
-        ssh_conn_id='ssh_hadoop_datanode1',
         bash_command="""
         ssh /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
         """,
-        dag=dag
+        ssh_hook=sshHook
     )
 
     # Mensaje OK
