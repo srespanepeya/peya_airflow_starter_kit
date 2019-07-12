@@ -19,7 +19,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2019, 7, 9),
-    'email': ['bigdata@pedidosya.com'],
+    'email': ['diego.pietruszka@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
     'retries': 15,
