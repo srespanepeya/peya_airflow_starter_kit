@@ -27,7 +27,7 @@ default_args = {
 }
 
 # Funciones
-def validate():
+def validate_message():
     #  ---- Logica validacion ----
     # Generacion archivo
     # Delta > x 
@@ -47,7 +47,7 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
     # Mensaje OK
     validate = PythonOperator(
         task_id = validate,
-        python_callable = validate
+        python_callable = validate_message
     )
 
     getDataTalonService >> validate
