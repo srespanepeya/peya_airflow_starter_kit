@@ -26,7 +26,7 @@ def format_hello(**kwargs):
     return 'Hello from Python !! Current execution time is ' + kwargs['execution_date'].strftime('%Y-%m-%d')
 
 
-with DAG('hello-world-dag', schedule_interval=None, catchup=False, default_args=default_args) as dag:
+with DAG('sr_dag', schedule_interval=None, catchup=False, default_args=default_args) as dag:
 
     slack_success = SlackAPIPostOperator(
         dag=dag,
