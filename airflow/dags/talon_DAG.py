@@ -37,10 +37,11 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
-        bash_command="""
+        command="""
         /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
         """,
-        ssh_hook=sshHook
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1"
     )
 
     # Mensaje OK
