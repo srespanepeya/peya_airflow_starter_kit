@@ -46,7 +46,7 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
 
     # Mensaje OK
     validate = PythonOperator(
-        task_id = messageOK,
+        task_id = validate,
         python_callable = validate
     )
 
