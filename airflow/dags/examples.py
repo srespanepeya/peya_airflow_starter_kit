@@ -1,14 +1,21 @@
-#  _   _   _   _ _ 
-# / \ / \ / \ / \ # 
-#( D | A | G | S )#
-#_\_/_\_/_\_/_\_/_# 
-
+#   ____________       _____________
+#  ____    |__( )_________  __/__  /________      __
+# ____  /| |_  /__  ___/_  /_ __  /_  __ \_ | /| / /
+# ___  ___ |  / _  /   _  __/ _  / / /_/ /_ |/ |/ /
+# __/_/  |_/_/  /_/    /_/    /_/  \____/____/|__/
 
 #Dummy operator
 from airflow.operators.dummy_operator import DummyOperator
 execution_end = DummyOperator(task_id='execution_end')
 
 
+#SSH operator
+from airflow.contrib.hooks import SSHHook
+sshHook = SSHHook(conn_id=<YOUR CONNECTION ID FROM THE UI>)
+run_ssh_command = SSHExecuteOperator(
+    task_id="run_ssh_command",
+    bash_command="some magic command",
+    ssh_hook=sshHook)
 
 #RedshiftToS3Transfer
 
@@ -17,8 +24,9 @@ execution_end = DummyOperator(task_id='execution_end')
 #S3 to Redshift
 from airflow.operators import PostgresOperator
 from airflow.hooks import S3Hook
-
+#Se crea un conector para S3
 s3 = S3hook(aws_conn_id="aws_conection_id") 
+#Se crea un postgress operator que ejecutara el script para llevar de S3 a redshift
 redshift_load_task = PostgresOperator("""
     copy my_table 
     FROM '{{ params.source }}' 
@@ -77,8 +85,7 @@ send_message_to_slack = PythonOperator(
     task_id='send_message_to_slack',
     provide_context=True,
     python_callable=f_call_send_message_to_slack,
-    op_kwargs={'text': "Hola soy un texto de prueba"},
-    dag=dag
+    op_kwargs={'text': "Hola soy un texto de prueba"}
 )    
 
 
