@@ -37,8 +37,9 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
         bash_command="""
         ssh /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
         """,
-        dag=dag)
+        dag=dag
     )
+
     # Mensaje OK
     validate = PythonOperator(
         task_id = messageOK,
