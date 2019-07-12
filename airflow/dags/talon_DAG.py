@@ -38,7 +38,10 @@ with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_ar
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
         command="""
-        ls /home/hduser/backendbi-procesos/
+        cd /home/hduser/backendbi-procesos/
+        ls
+        pwd
+        ./start_backendbi-procesos_weekly.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
