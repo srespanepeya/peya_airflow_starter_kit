@@ -40,7 +40,7 @@ with DAG('Talon_DAG', schedule_interval='0 0 */2 * * *', catchup=False, default_
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/start_airflow_talon.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
