@@ -1,5 +1,7 @@
 from builtins import range
 from datetime import datetime, timedelta
+import os
+import stat
 
 import airflow
 from airflow.models import DAG
@@ -33,22 +35,20 @@ def validate_message():
     # Delta > x 
     print('OK!')
 
-with DAG('Talon_DAG', schedule_interval='00 12 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('Talon_DAG', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
         command="""
-        pwd
         /usr/bin/bash /home/hduser/backendbi-procesos/start_backendbi-procesos_weekly.sh
-        pwd
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
     # Mensaje OK
-    validate = PythonOperator(
-        task_id = "validate",
+    validationGetDataTalonService = PythonOperator(
+        task_id = "validationGetDataTalonService",
         python_callable = validate_message
     )
 
