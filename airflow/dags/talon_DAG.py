@@ -52,5 +52,5 @@ with DAG('Talon_DAG', schedule_interval='0 0 */2 * * *', catchup=False, default_
         python_callable = validate_message
     )
 
-    getDataTalonService >> validate
+    getDataTalonService >> validationGetDataTalonService
 
