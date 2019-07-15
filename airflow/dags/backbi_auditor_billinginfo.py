@@ -35,7 +35,7 @@ def validate_message():
     # Delta > x 
     print('OK!')
 
-with DAG('BackendBI_Auditoria_BillingInfo', schedule_interval='0 0 3 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('BackendBI_Auditoria_BillingInfo', schedule_interval='0 0 6 * * *', catchup=False, default_args=default_args) as dag:
     # Llamado al auditor de billing info en datanode 2
     runBillingInfoAuditor = SSHOperator(
         task_id="BillingInfoAuditor",
