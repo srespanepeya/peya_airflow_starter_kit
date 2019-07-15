@@ -42,7 +42,6 @@ with DAG('hello-world-dag-cc', schedule_interval=None, catchup=False, default_ar
         email_on_failure='bi-producto@pedidosya.com'
     ) """
 
-    nodo_tontin = Opera
-
+    
     # Define the DAG structure.
 #     t1 >> t2 >> t3
