@@ -36,7 +36,7 @@ def validate_message():
     # Delta > x 
     print('OK!')
 
-with DAG('Talon_DAG', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
