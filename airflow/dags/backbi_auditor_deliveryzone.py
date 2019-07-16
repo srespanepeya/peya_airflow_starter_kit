@@ -35,7 +35,7 @@ def validate_message():
     # Delta > x 
     print('OK!')
 
-with DAG('BackendBI_Auditoria_DeliveryZones', schedule_interval='0 0 6 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('BackendBI_Auditoria_DeliveryZones', schedule_interval='0 6 * * *', catchup=False, default_args=default_args) as dag:
     # Llamado al auditor de delivery zones en datanode 2
     runDeliveryZonesAuditor = SSHOperator(
         task_id="DeliveryZonesAuditor",
