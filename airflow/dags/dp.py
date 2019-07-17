@@ -35,9 +35,4 @@ with DAG('dp', schedule_interval='00 12 * * *', catchup=False, default_args=defa
         bigquery_conn_id='peya_bigquery'
     )
 
-    print_sessions_ok = PythonOperator(
-        task_id = 'print_sessions_ok',
-        python_callable = print_ok_sessions
-    ) 
-
-    check_ga_sessions_all_platfroms_exist >> print_sessions_ok
+    check_ga_sessions_all_platfroms_exist
