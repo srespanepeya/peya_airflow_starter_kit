@@ -5,6 +5,7 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.models import Variable
+from airflow.utils.trigger_rule import TriggerRule
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.hooks.mysql_hook import MySqlHook
 from airflow.contrib.operators.mysql_to_gcs import MySqlToGoogleCloudStorageOperator
@@ -38,7 +39,7 @@ with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, 
         #bigquery_conn_id='peya_bigquery',
         #provide_context=True,
         sql='select id, name, short_name, culture from peyadb.country T',
-        bucket='peya_hue_generated_data',
+        bucket='peya_hue_generated_data/20190717/payments',
         filename='mysql_test.json',
         dag=dag
         #source_project_dataset_table='%s{{ yesterday_ds_nodash }}' % (temp_table_name),
