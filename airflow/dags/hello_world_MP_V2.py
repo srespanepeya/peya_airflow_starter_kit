@@ -38,7 +38,7 @@ with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, 
         google_cloud_storage_conn_id='peya_bigquery',
         #bigquery_conn_id='peya_bigquery',
         #provide_context=True,
-        sql='select id, name, short_name, culture from peyadb.country T',
+        sql='select id, name, short_name, culture from peyadb.country T where name = "Uruguay"',
         bucket='peya_hue_generated_data/20190717/payments',
         filename='mysql_test.json',
         dag=dag
