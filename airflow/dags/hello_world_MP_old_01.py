@@ -29,7 +29,7 @@ def format_hello(**kwargs):
     return 'Extracting data from MySQL !! Current execution time is ' + kwargs['execution_date'].strftime('%Y-%m-%d')
 
 
-with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, default_args=default_args) as dag:
+with DAG('Moving-MySQL-Datalake-dag-MP-old', schedule_interval=None, catchup=False, default_args=default_args) as dag:
 
     generate_file_in_bucket = BigQueryToCloudStorageOperator(
         task_id='generate_file_in_bucket',
