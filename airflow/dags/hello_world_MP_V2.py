@@ -40,7 +40,7 @@ with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, 
         #provide_context=True,
         sql='select id, name, short_name, culture from peyadb.country T where name = "Uruguay"',
         bucket='peya_hue_generated_data',
-        filename='/20190717/payments/mysql_test.json',
+        filename='20190717/payments/mysql_test.json',
         dag=dag
         #source_project_dataset_table='%s{{ yesterday_ds_nodash }}' % (temp_table_name),
         #destination_cloud_storage_uris=[
