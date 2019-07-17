@@ -26,7 +26,7 @@ default_args = {
     'email_on_failure': True,
     'email_on_retry': True,
     'retries': 5,
-    'retry_delay': timedelta(minutes=60)
+    'retry_delay': timedelta(minutes=5)
 }
 
 with DAG('Talon_DAG_Testing', schedule_interval='0 */2 * * *', catchup=False, default_args=default_args) as dag:
