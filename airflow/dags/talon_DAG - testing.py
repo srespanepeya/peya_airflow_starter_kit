@@ -40,12 +40,14 @@ with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, 
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    validationGetDataTalon = SSHOperator(
-        task_id = "validationGetDataTalon",
+    validationGetDataTalonService = SSHOperator(
+        task_id = "validationGetDataTalonService",
         command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    getDataTalonService >> validationGetDataTalon
+    getDataTalonService >> validationGetDataTalonService
 
