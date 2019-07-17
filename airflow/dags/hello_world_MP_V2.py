@@ -34,7 +34,7 @@ with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, 
 
     generate_file_in_bucket = MySqlToGoogleCloudStorageOperator(
         task_id='generate_file_in_bucket',
-        mysql_conn_id='mysql_conn_id',
+        mysql_conn_id='mysql_testing_db',
         google_cloud_storage_conn_id='peya_bigquery',
         #bigquery_conn_id='peya_bigquery',
         #provide_context=True,
