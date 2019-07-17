@@ -80,4 +80,4 @@ with DAG('Moving-MySQL-Datalake-dag-MP', schedule_interval=None, catchup=False, 
         retries=0
     )
 
-    generate_file_in_bucket >> [SlackAPIPostOperator, SlackAPIPostOperator]
+    generate_file_in_bucket >> [slack_success, slack_error]
