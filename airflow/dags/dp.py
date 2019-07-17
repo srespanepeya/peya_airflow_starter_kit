@@ -18,7 +18,7 @@ default_args = {
     'email': ['bigdata@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 15,
+    'retries': 5,
     'retry_delay': timedelta(minutes=60)
 }
 

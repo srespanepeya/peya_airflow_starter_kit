@@ -25,11 +25,11 @@ default_args = {
     'email': ['diego.pietruszka@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 15,
+    'retries': 5,
     'retry_delay': timedelta(minutes=60)
 }
 
-with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('Talon_DAG_Testing', schedule_interval='0 */2 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
