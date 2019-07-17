@@ -29,13 +29,6 @@ default_args = {
     'retry_delay': timedelta(minutes=60)
 }
 
-# Funciones
-def validate_message():
-    #  ---- Logica validacion ----
-    # Generacion archivo
-    # Delta > x 
-    print('OK!')
-
 with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
@@ -47,16 +40,10 @@ with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, 
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    # Mensaje OK
-    validationGetDataTalonService = PythonOperator(
-        task_id = "validationGetDataTalonService",
-        python_callable = validate_message
-    )
-
-    validationGetDataTalon = BashOperator(
+    validationGetDataTalon = SSHOperator(
         task_id = "validationGetDataTalon",
-        bash_command="""
-        date=$(date '+%Y%m%d')
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
         """
     )
 
