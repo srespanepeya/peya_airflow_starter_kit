@@ -32,11 +32,7 @@ with DAG('dp', schedule_interval='00 12 * * *', catchup=False, default_args=defa
         SELECT 1 FROM {{ params.table_name_ios }}
         """,
         use_legacy_sql = False,
-        bigquery_conn_id='peya_bigquery',
-        params={
-            'table_name_android': table_name_android,
-            'table_name_ios': table_name_ios
-        }
+        bigquery_conn_id='peya_bigquery'
     )
 
     print_sessions_ok = PythonOperator(
