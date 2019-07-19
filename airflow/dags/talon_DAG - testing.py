@@ -25,18 +25,11 @@ default_args = {
     'email': ['diego.pietruszka@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 15,
-    'retry_delay': timedelta(minutes=60)
+    'retries': 5,
+    'retry_delay': timedelta(minutes=5)
 }
 
-# Funciones
-def validate_message():
-    #  ---- Logica validacion ----
-    # Generacion archivo
-    # Delta > x 
-    print('OK!')
-
-with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('Talon_DAG_Testing', schedule_interval='0 */2 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     getDataTalonService = SSHOperator(
         task_id="getDataTalonService",
@@ -47,18 +40,14 @@ with DAG('Talon_DAG_Testing', schedule_interval='0 0 */2 * * *', catchup=False, 
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    # Mensaje OK
-    validationGetDataTalonService = PythonOperator(
+    validationGetDataTalonService = SSHOperator(
         task_id = "validationGetDataTalonService",
-        python_callable = validate_message
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    validationGetDataTalon = BashOperator(
-        task_id = "validationGetDataTalon",
-        bash_command="""
-        date=$(date '+%Y%m%d')
-        """
-    )
-
-    getDataTalonService >> validationGetDataTalon
+    getDataTalonService >> validationGetDataTalonService
 

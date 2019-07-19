@@ -18,7 +18,7 @@ default_args = {
     'email': ['bigdata@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 15,
+    'retries': 5,
     'retry_delay': timedelta(minutes=60)
 }
 
@@ -32,16 +32,7 @@ with DAG('dp', schedule_interval='00 12 * * *', catchup=False, default_args=defa
         SELECT 1 FROM {{ params.table_name_ios }}
         """,
         use_legacy_sql = False,
-        bigquery_conn_id='peya_bigquery',
-        params={
-            'table_name_android': table_name_android,
-            'table_name_ios': table_name_ios
-        }
+        bigquery_conn_id='peya_bigquery'
     )
 
-    print_sessions_ok = PythonOperator(
-        task_id = 'print_sessions_ok',
-        python_callable = print_ok_sessions
-    ) 
-
-    check_ga_sessions_all_platfroms_exist >> print_sessions_ok
+    check_ga_sessions_all_platfroms_exist
