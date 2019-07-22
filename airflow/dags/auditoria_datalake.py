@@ -19,7 +19,7 @@ with DAG('Auditoria_DL', schedule_interval='0 10 * * *', catchup=False, default_
     execute_auditoria = BashOperator(
     task_id='execute_auditoria',
     bash_command="""
-        /home/hduser/airflow/auditoria/run_auditoria_dl.sh
+        /home/hduser/auditoria/run_auditoria_dl.sh
         """
     )
 
