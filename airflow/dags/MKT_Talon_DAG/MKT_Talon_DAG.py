@@ -66,6 +66,9 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
+    checkpoint = DummyOperator(
+        task_id='checkpoint')
+
     process_data_and_move_to_s3_campaigns = SSHOperator(
         task_id = "process_data_and_move_to_s3_campaigns",
         command="""
@@ -92,6 +95,6 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
     # Columnas del ODS, de que archivos vienen... 
 
     get_data_from_talon_service >> validationGetDataTalonService >> \
-        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> \
+        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> checkpoint >> \
             [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons]
 
