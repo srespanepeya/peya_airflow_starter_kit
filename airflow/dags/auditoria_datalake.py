@@ -1,0 +1,24 @@
+from airflow.operators.bash_operator import BashOperator
+
+# Params DAG
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2019, 7, 9),
+    'email': ['diego.pietruszka@pedidosya.com'],
+    'email_on_failure': True,
+    'email_on_retry': True,
+    'retries': 5,
+    'retry_delay': timedelta(minutes=5)
+}
+
+with DAG('Auditoria_DataLake', schedule_interval='0 10 * * *', catchup=False, default_args=default_args) as dag:
+    execute_auditoria = BashOperator(
+    task_id='execute_auditoria',
+    bash_command="""
+        /home/hduser/airflow/auditoria/run_auditoria_dl.sh
+        """ 
+    )
+
+    execute_auditoria
+
