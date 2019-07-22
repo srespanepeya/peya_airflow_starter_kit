@@ -18,8 +18,8 @@ with DAG('Auditoria_DataLake', schedule_interval='0 10 * * *', catchup=False, de
     task_id='execute_auditoria',
     bash_command="""
         /home/hduser/airflow/auditoria/run_auditoria_dl.sh
-        """ 
-    )
+        """,
+    dag=dag)
 
     execute_auditoria
 
