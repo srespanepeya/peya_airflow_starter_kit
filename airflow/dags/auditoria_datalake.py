@@ -13,13 +13,13 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('Auditoria_DataLake', schedule_interval='0 10 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('Auditoria_DL', schedule_interval='0 10 * * *', catchup=False, default_args=default_args) as dag:
     execute_auditoria = BashOperator(
     task_id='execute_auditoria',
     bash_command="""
         /home/hduser/airflow/auditoria/run_auditoria_dl.sh
-        """,
-    dag=dag)
+        """
+    )
 
     execute_auditoria
 
