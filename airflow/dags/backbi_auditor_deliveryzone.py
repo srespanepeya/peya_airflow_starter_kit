@@ -42,7 +42,7 @@ with DAG('BackendBI_Auditoria_DeliveryZones', schedule_interval='0 6 * * *', cat
         command="""
         /usr/bin/bash /home/hduser/backendbi-audit/DeliveryZone/DeliveryZoneSyncValidation/DeliveryZoneSyncValidation_run.sh
         """,
-        timeout = 20,
+        timeout = 60,
         ssh_conn_id = "ssh_hadoop_datanode2_ti"
     )
 
