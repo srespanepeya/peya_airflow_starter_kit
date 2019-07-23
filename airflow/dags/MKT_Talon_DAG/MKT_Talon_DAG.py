@@ -67,7 +67,7 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
     )
 
     validation_copy_data_from_lfs_to_hdfs = SSHOperator(
-        task_id="validation_copy_data_from_lfs_to_hdfs"
+        task_id="validation_copy_data_from_lfs_to_hdfs",
         command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh"
         """,
