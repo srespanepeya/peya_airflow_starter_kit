@@ -42,7 +42,7 @@ with DAG('BackendBI_Auditoria_Partners', schedule_interval='0 6 * * *', catchup=
         command="""
         /usr/bin/bash /home/hduser/backendbi-audit/Partner/PartnersSyncValidation/PartnersSyncValidation_run.sh
         """,
-        timeout = 20,
+        timeout = 60,
         ssh_conn_id = "ssh_hadoop_datanode2_ti"
     )
 
