@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('Auditoria_DL', schedule_interval='0 10 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Auditoria', schedule_interval='0 10 * * *', catchup=False, default_args=default_args) as dag:
     execute_auditoria = BashOperator(
     task_id='execute_auditoria',
     bash_command="""
