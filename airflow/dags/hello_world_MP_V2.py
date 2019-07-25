@@ -8,6 +8,7 @@ from airflow.models import Variable
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.hooks.mysql_hook import MySqlHook
 from airflow.contrib.operators.mysql_to_gcs import MySqlToGoogleCloudStorageOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 default_args = {
     'owner': 'root',
