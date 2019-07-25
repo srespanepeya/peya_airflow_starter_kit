@@ -39,8 +39,8 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    validationGetDataTalonService = SSHOperator(
-        task_id = "validationGetDataTalonService",
+    validation_get_data_talon_service = SSHOperator(
+        task_id = "validation_get_data_talon_service",
         command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
         """,
@@ -66,8 +66,14 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    checkpoint = DummyOperator(
-        task_id='checkpoint')
+    validation_copy_data_from_lfs_to_hdfs = SSHOperator(
+        task_id="validation_copy_data_from_lfs_to_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh"
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    )
 
     process_data_and_move_to_s3_campaigns = SSHOperator(
         task_id = "process_data_and_move_to_s3_campaigns",
@@ -94,7 +100,7 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
     # usuario de amazon para Santiago y Nicolas
     # Columnas del ODS, de que archivos vienen... 
 
-    get_data_from_talon_service >> validationGetDataTalonService >> \
-        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> checkpoint >> \
+    get_data_from_talon_service >> validation_get_data_talon_service >> \
+        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> validation_copy_data_from_lfs_to_hdfs >> \
             [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons]
 
