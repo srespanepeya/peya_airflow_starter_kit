@@ -24,7 +24,7 @@ default_args = {
     'email': ['carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 5,
+    'retries': 2,
     'retry_delay': timedelta(minutes=10)
 }
 
