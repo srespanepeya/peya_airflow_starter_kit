@@ -75,23 +75,44 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    process_data_and_move_to_s3_campaigns = SSHOperator(
-        task_id = "process_data_and_move_to_s3_campaigns",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+
+    process_data_and_move_to_s3_campaigns = BashOperator(
+        task_id='process_data_and_move_to_s3_campaigns',
+        bash_command="""
+            pwd
+        """
     )
 
-    process_data_and_move_to_s3_coupons = SSHOperator(
-        task_id = "process_data_and_move_to_s3_coupons",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    process_data_and_move_to_s3_coupons = BashOperator(
+        task_id='process_data_and_move_to_s3_coupons',
+        bash_command="""
+            /home/hduser/spark/apps/product_load_flat_sessions_to_hdfs.sh
+        """
     )
+
+    # process_data_and_move_to_s3_campaigns = SSHOperator(
+    #     task_id = "process_data_and_move_to_s3_campaigns",
+    #     command="""
+    #     /usr/bin/bash /home/hduser/spark/apps/mkt_process_coupons_to_s3.sh
+    #     """,
+    #     timeout = 20,
+    #     ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    # )
+
+    # process_data_and_move_to_s3_coupons = SSHOperator(
+    #     task_id = "process_data_and_move_to_s3_coupons",
+    #     command="""
+    #     /usr/bin/bash /home/hduser/spark/apps/
+    #     """,
+    #     timeout = 20,
+    #     ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    # )
+
+
+
+#hdfs dfs -cp s3a://peyabi.bigdata/talon/coupons/export/part-*.csv.gz s3a://peyabi.bigdata/talon/coupons/export/prueba_talon_vouchers.csv.gz
+#hdfs dfs -mv s3a://peyabi.bigdata/talon/coupons/export/prueba_talon_vouchers.csv.gz s3a://peyabi.ods.exports/ods_vouchers/prueba_talon_vouchers.csv.gz
+
 
     # Ver con Carlos en parseo de campos
     # GZIP
