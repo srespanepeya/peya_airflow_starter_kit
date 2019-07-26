@@ -86,7 +86,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     process_data_and_move_to_s3_coupons = BashOperator(
         task_id='process_data_and_move_to_s3_coupons',
         bash_command="""
-            /home/hduser/spark/apps/product_load_flat_sessions_to_hdfs.sh
+            /home/hduser/spark/apps/mkt_process_coupons_to_s3.sh
         """
     )
 
