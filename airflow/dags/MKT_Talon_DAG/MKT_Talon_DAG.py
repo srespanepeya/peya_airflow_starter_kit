@@ -28,7 +28,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     get_data_from_talon_service = SSHOperator(
         task_id="get_data_from_talon_service",
