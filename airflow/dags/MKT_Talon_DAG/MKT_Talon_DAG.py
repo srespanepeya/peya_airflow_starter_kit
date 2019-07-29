@@ -75,22 +75,18 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    process_data_and_move_to_s3_campaigns = SSHOperator(
-        task_id = "process_data_and_move_to_s3_campaigns",
+    process_data_and_move_to_s3_campaigns = BashOperator(
+        task_id='process_data_and_move_to_s3_campaigns',
         command="""
         pwd
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+        """
     )
 
-    process_data_and_move_to_s3_coupons = SSHOperator(
-        task_id = "process_data_and_move_to_s3_coupons",
+    process_data_and_move_to_s3_coupons = BashOperator(
+        task_id='process_data_and_move_to_s3_coupons',
         command="""
         /usr/bin/bash /home/hduser/spark/apps/mkt_process_coupons_to_s3.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+        """
     )
 
     
