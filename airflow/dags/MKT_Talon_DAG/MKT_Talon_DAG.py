@@ -69,7 +69,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     validation_copy_data_from_lfs_to_hdfs = SSHOperator(
         task_id="validation_copy_data_from_lfs_to_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh"
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
