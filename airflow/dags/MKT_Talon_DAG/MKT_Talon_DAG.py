@@ -28,7 +28,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     get_data_from_talon_service = SSHOperator(
         task_id="get_data_from_talon_service",
@@ -69,29 +69,50 @@ with DAG('MKT_Talon_DAG', schedule_interval='0 6 * * *', catchup=False, default_
     validation_copy_data_from_lfs_to_hdfs = SSHOperator(
         task_id="validation_copy_data_from_lfs_to_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh"
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    process_data_and_move_to_s3_campaigns = SSHOperator(
-        task_id = "process_data_and_move_to_s3_campaigns",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+
+    process_data_and_move_to_s3_campaigns = BashOperator(
+        task_id='process_data_and_move_to_s3_campaigns',
+        bash_command="""
+            pwd
+        """
     )
 
-    process_data_and_move_to_s3_coupons = SSHOperator(
-        task_id = "process_data_and_move_to_s3_coupons",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    process_data_and_move_to_s3_coupons = BashOperator(
+        task_id='process_data_and_move_to_s3_coupons',
+        bash_command="""
+            /home/hduser/spark/apps/mkt_process_coupons_to_s3.sh
+        """
     )
+
+    # process_data_and_move_to_s3_campaigns = SSHOperator(
+    #     task_id = "process_data_and_move_to_s3_campaigns",
+    #     command="""
+    #     /usr/bin/bash /home/hduser/spark/apps/mkt_process_coupons_to_s3.sh
+    #     """,
+    #     timeout = 20,
+    #     ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    # )
+
+    # process_data_and_move_to_s3_coupons = SSHOperator(
+    #     task_id = "process_data_and_move_to_s3_coupons",
+    #     command="""
+    #     /usr/bin/bash /home/hduser/spark/apps/
+    #     """,
+    #     timeout = 20,
+    #     ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    # )
+
+
+
+#hdfs dfs -cp s3a://peyabi.bigdata/talon/coupons/export/part-*.csv.gz s3a://peyabi.bigdata/talon/coupons/export/prueba_talon_vouchers.csv.gz
+#hdfs dfs -mv s3a://peyabi.bigdata/talon/coupons/export/prueba_talon_vouchers.csv.gz s3a://peyabi.ods.exports/ods_vouchers/prueba_talon_vouchers.csv.gz
+
 
     # Ver con Carlos en parseo de campos
     # GZIP
