@@ -26,11 +26,11 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                 partition = dt.strftime("%Y%m%d")
         else:
                 partition = app_args.fecha
-        conf = SparkConf().setAppName("ETL_BATCH_MKT_CAMPAIGNS_{0}".format(partition))
+        conf = SparkConf().setAppName("ETL_BATCH_MKT_COUPONS_{0}".format(partition))
         sc = SparkContext(conf=conf)
         sqlContext = SQLContext(sc)
         print('--->START READING DATA FROM HDFS JSON')
-        df = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/batch/batch/*.parquet')
+        df = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/coupons/batch/*.parquet')
         print('<---END READING DATA FROM HDFS JSON')
         print('----@>ROW COUNT:{0}'.format(df.count()))
         print('--->START DISCOVERING AND ADJUSTING SCHEMA')
