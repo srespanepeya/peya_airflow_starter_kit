@@ -18,8 +18,8 @@ try:
 except:
     git_repo_path = "/root/airflow_extra/peya_airflow_starter_kit"
 
-dag_path="{git_repo_path}/airflow/dags/MKT_Talon_DAG/"
-py_path= "{dag_path}/py/"
+dag_path="{0}/airflow/dags/MKT_Talon_DAG/".format(git_repo_path)
+py_path= "{0}/py/".format(dag_path)
 
 
 today_nodash = date.today().strftime("%Y%m%d")
@@ -96,10 +96,10 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         task_id='process_data_and_move_to_s3_coupons',
         bash_command="""
         echo "--->Begin BATCH MKT Campaigns"
-        chmod 755 {py_path}/mkt_process_coupons_to_s3.py
-        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 10G --driver-cores 8 --executor-memory 10G --conf spark.cores.max=8 {py_path}/mkt_process_coupons_to_s3.py
+        chmod 755 {0}/mkt_process_coupons_to_s3.py
+        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 10G --driver-cores 8 --executor-memory 10G --conf spark.cores.max=8 {0}/mkt_process_coupons_to_s3.py
         echo "<---End BATCH MKT Campaigns"
-        """
+        """.format(py_path)
     )
 
     dwh_load_coupons_from_s3 = SSHOperator(
