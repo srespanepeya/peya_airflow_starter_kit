@@ -33,7 +33,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     get_data_from_talon_service = SSHOperator(
         task_id="get_data_from_talon_service",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/start_airflow_talon.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/start_airflow_talon_batch.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"

@@ -32,7 +32,7 @@ table_name_ios = '`110191523.ga_sessions_' + yesterday_date + '`'
 table_name_webd = '`110187139.ga_sessions_' + yesterday_date + '`'
 table_name_webm = '`110187640.ga_sessions_' + yesterday_date + '`'
 
-with DAG('BigData_BQSessions', schedule_interval='0 9 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('BigData_BQSessions', schedule_interval='0 12 * * *', catchup=False, default_args=default_args) as dag:
 
     execution_start = DummyOperator(
         task_id='execution_start',
