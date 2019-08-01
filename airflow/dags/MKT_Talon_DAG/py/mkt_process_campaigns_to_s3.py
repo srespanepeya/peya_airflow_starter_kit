@@ -56,8 +56,12 @@ def funcion_process_mkt_campaigns(app_args):
            from campaigns
         '''
         df_campaigns = sqlContext.sql(consulta)
-
         df_campaigns.show(10,truncate=False)
+        df_campaigns.write \
+                .mode ("overwrite") \
+                .format("com.databricks.spark.csv") \
+                .option("codec", "org.apache.hadoop.io.compress.GzipCodec") \
+                .save("s3a://peyabi.bigdata/talon/campaigns/export")        
 
     except:
         print(traceback.format_exc())
