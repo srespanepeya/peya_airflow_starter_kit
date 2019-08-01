@@ -105,6 +105,15 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         """.format(py_path)
     )
 
+    validation_process_data_and_move_to_s3 = SSHOperator(
+        task_id="validation_process_data_and_move_to_s3",
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_hdfs_to_s3.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    )
+
     dwh_load_coupons_from_s3 = SSHOperator(
         task_id="dwh_get_coupons_from_s3",
         command="""
@@ -134,5 +143,5 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
 
     get_data_from_talon_service >> validation_get_data_talon_service >> \
         [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> validation_copy_data_from_lfs_to_hdfs >> \
-            [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
+            [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> validation_process_data_and_move_to_s3 >> dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
 
