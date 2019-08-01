@@ -89,8 +89,9 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                   .option("codec", "org.apache.hadoop.io.compress.GzipCodec") \
                   .save("s3a://peyabi.bigdata/talon/coupons/export")
     except:
-        print(traceback.format_exc())
+        print()
         time.sleep(1) #workaround para el bug del thread shutdown
+        raise ValueError(traceback.format_exc())
 
 def get_app_args():
         parser = argparse.ArgumentParser()
