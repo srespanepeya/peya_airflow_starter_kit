@@ -18,8 +18,8 @@ try:
 except:
     git_repo_path = "/root/airflow_extra/peya_airflow_starter_kit"
 
-dag_path="{0}/airflow/dags/MKT_Talon_DAG/".format(git_repo_path)
-py_path= "{0}/py/".format(dag_path)
+dag_path="{0}/airflow/dags/MKT_Talon_DAG".format(git_repo_path)
+py_path= "{0}/py".format(dag_path)
 
 
 today_nodash = date.today().strftime("%Y%m%d")

@@ -54,7 +54,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         df.printSchema()
         print('<---END DISCOVERING AND ADJUSTING SCHEMA')
         
-        
+        df.createOrReplaceTempView('coupons')
         consulta = '''
                 select id,
                        campaignid as campaing_id,
