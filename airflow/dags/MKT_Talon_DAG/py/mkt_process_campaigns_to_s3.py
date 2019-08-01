@@ -19,76 +19,49 @@ import pandas as pd
 # Se importa la libreria de funciones de Spark SQL
 from pyspark.sql.functions import *
 
-def funcion_load_flat_sessions_to_hdfs(app_args):
+def funcion_process_mkt_campaigns(app_args):
     try:
         if not app_args.fecha:
                 dt = datetime.datetime.now()
                 partition = dt.strftime("%Y%m%d")
         else:
                 partition = app_args.fecha
-        conf = SparkConf().setAppName("ETL_BATCH_MKT_CAMPAIGNS_{0}".format(partition))
+        conf = SparkConf().setAppName("ETL_PROCESS_COUPONS_TO_S3_{0}".format(partition))
         sc = SparkContext(conf=conf)
         sqlContext = SQLContext(sc)
-        print('--->START READING DATA FROM HDFS JSON')
-        df = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/batch/batch/*.parquet')
-        print('<---END READING DATA FROM HDFS JSON')
+        print('--->START READING CAMPAIGNS FROM HDFS')
+        df = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/campaigns/batch/*.parquet')
+        print('<---END READING CAMPAIGNS FROM HDFS')
         print('----@>ROW COUNT:{0}'.format(df.count()))
         print('--->START DISCOVERING AND ADJUSTING SCHEMA')
-        df = df.withColumn('attributes', regexp_replace('attributes', "; ","\"\,\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', ": ","\":\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', "\{","\{\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', "}","\"}"))
         df.printSchema()
-        att_fields = ['CountryId','CityId','DiscountAmount','UsedAmount','PeyaPays','Title','OrderId','Reason','AgentId','AdvocateId']
-        att_schema = sqlContext.read.json(df.rdd.map(lambda row: row.attributes)).schema
-        schema_fields = att_schema.fieldNames()
+        print('--->END DISCOVERING AND ADJUSTING SCHEMA')
 
-        for f in att_fields:
-                if not f in schema_fields:
-                        print(f,'---@>Adding column {0} because it was missing')
-                        att_schema.add(f, StringType(), True)
-
-        df = df.withColumn('attributes', from_json('attributes', att_schema))
-
-        #df.select("attributes").show(10,truncate = False)
-        df.printSchema()
-        print('<---END DISCOVERING AND ADJUSTING SCHEMA')
-        df.createOrReplaceTempView('coupons')
+        df.createOrReplaceTempView('campaigns')
         consulta = '''
-                select id,
-                       campaignid as campaing_id,
-                       recipientintegrationid as user_id,
-                       replace(replace(created, "T"," "),"Z","") as created,
-                       replace(replace(startdate, "T"," "),"Z","") as start,
-                       replace(replace(expirydate, "T"," "),"Z","") as expiry,
-                       value as value,
-                       limitval as usage_limit,
-                       counter as usage_counter,
-                       attributes.CountryId as att_country,
-                       attributes.CityId as att_city,
-                       attributes.DiscountAmount as att_discount_amount,
-                       attributes.UsedAmount as att_used_amount,
-                       attributes.PeyaPays as att_peyapays,
-                       attributes.Title as att_title,
-                       attributes.OrderId as att_order,
-                       attributes.Reason as att_backoffice_reason,
-                       attributes.AgentId as att_backoffice_user,
-                       batchid as batch_id,
-                       attributes.AdvocateId as advocate_id
-                from coupons
+           select id as id,
+                  trim(name) as name,
+                  trim(description) as description,
+                  replace(replace(created, "T"," "),"Z","") as created,
+                  replace(replace(updated, "T"," "),"Z","") as updated,
+                  updatedBy as updated_by,
+                  replace(replace(lastActivity, "T"," "),"Z","") as last_activity,
+                  replace(replace(start, "T"," "),"Z","") as start_time,
+                  replace(replace(end, "T"," "),"Z","") as end_time,
+                  state as state,
+                  couponRedemtionCount as coupon_redemtion_count,
+                  refferalRedemtionCount as refferal_redemtion_count,
+                  discountCount as discount_count
+
+           from campaigns
         '''
-        df_coupons = sqlContext.sql(consulta)
-        df_coupons.printSchema()
-        df_coupons.show(10,truncate=False)
-        #df_coupons.coalesce(1) \
-        df_coupons.write \
-                  .mode ("overwrite") \
-                  .format("com.databricks.spark.csv") \
-                  .option("codec", "org.apache.hadoop.io.compress.GzipCodec") \
-                  .save("s3a://peyabi.bigdata/talon/coupons/export")
+        df_campaigns = sqlContext.sql(consulta)
+
+        df_campaigns.show(10,truncate=False)
+
     except:
         print(traceback.format_exc())
-        time.sleep(1) #workaround para el bug del thread shutdown
+        time.sleep(1)
 
 def get_app_args():
         parser = argparse.ArgumentParser()
@@ -97,4 +70,4 @@ def get_app_args():
 
 if __name__ == '__main__':
         app_args = get_app_args()
-        funcion_load_flat_sessions_to_hdfs(app_args)
+        funcion_process_mkt_campaigns(app_args)

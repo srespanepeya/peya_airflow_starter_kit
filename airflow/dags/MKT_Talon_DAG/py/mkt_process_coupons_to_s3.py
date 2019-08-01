@@ -29,9 +29,9 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         conf = SparkConf().setAppName("ETL_BATCH_MKT_COUPONS_{0}".format(partition))
         sc = SparkContext(conf=conf)
         sqlContext = SQLContext(sc)
-        print('--->START READING DATA FROM HDFS JSON')
+        print('--->START READING COUPONS DATA FROM HDFS')
         df = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/coupons/batch/*.parquet')
-        print('<---END READING DATA FROM HDFS JSON')
+        print('<---END READING COUPONS DATA FROM HDFS')
         print('----@>ROW COUNT:{0}'.format(df.count()))
         print('--->START DISCOVERING AND ADJUSTING SCHEMA')
         df = df.withColumn('attributes', regexp_replace('attributes', "; ","\"\,\""))
@@ -39,7 +39,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         df = df.withColumn('attributes', regexp_replace('attributes', "\{","\{\""))
         df = df.withColumn('attributes', regexp_replace('attributes', "}","\"}"))
         df.printSchema()
-        att_fields = ['CountryId','CityId','DiscountAmount','UsedAmount','PeyaPays','Title','OrderId','Reason','AgentId','AdvocateId']
+        att_fields = ['CountryId','CityId','DiscountAmount','UsedAmount','PeyaPays','Title','OrderId','Reason','AgentId','AdvocateId','OriginalId']
         att_schema = sqlContext.read.json(df.rdd.map(lambda row: row.attributes)).schema
         schema_fields = att_schema.fieldNames()
 
@@ -53,7 +53,8 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         #df.select("attributes").show(10,truncate = False)
         df.printSchema()
         print('<---END DISCOVERING AND ADJUSTING SCHEMA')
-        df.createOrReplaceTempView('coupons')
+        
+        
         consulta = '''
                 select id,
                        campaignid as campaing_id,
@@ -74,7 +75,8 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                        attributes.Reason as att_backoffice_reason,
                        attributes.AgentId as att_backoffice_user,
                        batchid as batch_id,
-                       attributes.AdvocateId as advocate_id
+                       attributes.AdvocateId as advocate_id,
+                       attributes.OriginalId as original_id
                 from coupons
         '''
         df_coupons = sqlContext.sql(consulta)
