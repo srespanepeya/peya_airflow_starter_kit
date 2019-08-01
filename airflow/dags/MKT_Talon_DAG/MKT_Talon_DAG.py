@@ -92,7 +92,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         chmod 755 {0}/mkt_process_campaigns_to_s3.py
         /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 4G --driver-cores 4 --executor-memory 4G --conf spark.cores.max=4 {0}/mkt_process_campaigns_to_s3.py
         echo "<---End BATCH MKT Campaigns"
-        """
+        """.format(py_path)
     )
 
     process_data_and_move_to_s3_coupons = BashOperator(
