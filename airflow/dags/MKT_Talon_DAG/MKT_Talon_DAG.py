@@ -75,7 +75,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         bash_command="""
         echo "--->Begin BATCH MKT Campaigns"
         chmod 755 {0}/mkt_process_campaigns_to_s3.py
-        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 4G --driver-cores 4 --executor-memory 4G --conf spark.cores.max=4 {0}/mkt_process_campaigns_to_s3.py
+        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-bi:7077 --driver-memory 4G --driver-cores 4 --executor-memory 4G --conf spark.cores.max=4 {0}/mkt_process_campaigns_to_s3.py
         echo "<---End BATCH MKT Campaigns"
         /usr/bin/bash {0}/audit_talon_hdfs_to_s3.py -e "campaigns"
         """.format(py_path)
@@ -86,7 +86,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         bash_command="""
         echo "--->Begin BATCH MKT Coupons"
         chmod 755 {0}/mkt_process_coupons_to_s3.py
-        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 10G --driver-cores 8 --executor-memory 10G --conf spark.cores.max=8 {0}/mkt_process_coupons_to_s3.py
+        /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-bi:7077 --driver-memory 10G --driver-cores 8 --executor-memory 10G --conf spark.cores.max=8 {0}/mkt_process_coupons_to_s3.py
         echo "<---End BATCH MKT Coupons"
         /usr/bin/bash {0}/audit_talon_hdfs_to_s3.py -e "coupons"
         """.format(py_path)

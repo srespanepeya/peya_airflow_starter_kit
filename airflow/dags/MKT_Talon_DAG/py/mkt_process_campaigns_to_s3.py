@@ -26,7 +26,7 @@ def funcion_process_mkt_campaigns(app_args):
                 partition = dt.strftime("%Y%m%d")
         else:
                 partition = app_args.fecha
-        conf = SparkConf().setAppName("ETL_PROCESS_COUPONS_TO_S3_{0}".format(partition))
+        conf = SparkConf().setAppName("ETL_BATCH_MKT_CAMPAIGNS_{0}".format(partition))
         sc = SparkContext(conf=conf)
         sqlContext = SQLContext(sc)
         print('--->START READING CAMPAIGNS FROM HDFS')
