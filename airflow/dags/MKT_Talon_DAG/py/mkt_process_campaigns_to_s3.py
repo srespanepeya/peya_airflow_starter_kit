@@ -66,7 +66,7 @@ def funcion_process_mkt_campaigns(app_args):
     except:
         print(traceback.format_exc())
         time.sleep(1)
-        raise ValueError(traceback.format_exc())
+        exit(1)
 
 def get_app_args():
         parser = argparse.ArgumentParser()

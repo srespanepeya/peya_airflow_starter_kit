@@ -44,14 +44,6 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         task_id="get_data_from_talon_service",
         command="""
         /usr/bin/bash /home/hduser/backendbi-procesos/start_airflow_talon_batch.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
-    )
-
-    validation_get_data_talon_service = SSHOperator(
-        task_id = "validation_get_data_talon_service",
-        command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
         """,
         timeout = 20,
@@ -62,6 +54,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         task_id = "copy_data_from_lfs_to_hdfs_campaigns",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/carga_talon_centos_to_hdfs_batch.sh "campaigns" "/home/hduser/hdfs/data/solr/SQS/Talon/" "json"
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh "campaigns"
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
@@ -71,15 +64,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         task_id = "copy_data_from_lfs_to_hdfs_coupons",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/carga_talon_centos_to_hdfs_batch.sh "coupons" "/home/hduser/hdfs/data/solr/SQS/Talon/" "csv"
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
-    )
-
-    validation_copy_data_from_lfs_to_hdfs = SSHOperator(
-        task_id="validation_copy_data_from_lfs_to_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_fs_to_hdfs.sh "coupons"
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
@@ -92,6 +77,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         chmod 755 {0}/mkt_process_campaigns_to_s3.py
         /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 4G --driver-cores 4 --executor-memory 4G --conf spark.cores.max=4 {0}/mkt_process_campaigns_to_s3.py
         echo "<---End BATCH MKT Campaigns"
+        /usr/bin/bash {0}/audit_talon_hdfs_to_s3.py -e "campaigns"
         """.format(py_path)
     )
 
@@ -102,16 +88,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         chmod 755 {0}/mkt_process_coupons_to_s3.py
         /home/hduser/spark/bin/spark-submit --master spark://hadoop-namenode-ti:7077 --driver-memory 10G --driver-cores 8 --executor-memory 10G --conf spark.cores.max=8 {0}/mkt_process_coupons_to_s3.py
         echo "<---End BATCH MKT Coupons"
+        /usr/bin/bash {0}/audit_talon_hdfs_to_s3.py -e "coupons"
         """.format(py_path)
-    )
-
-    validation_process_data_and_move_to_s3 = SSHOperator(
-        task_id="validation_process_data_and_move_to_s3",
-        command="""
-        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_hdfs_to_s3.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
     dwh_load_coupons_from_s3 = SSHOperator(
@@ -121,6 +99,15 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
+    )
+
+    validation_dwh_load_coupons_from_s3 = SSHOperator(
+        task_id = "validation_dwh_load_coupons_from_s3",
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
     dwh_generate_fact_talon_coupons = SSHOperator(
@@ -142,6 +129,6 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     # Columnas del ODS, de que archivos vienen... 
 
     get_data_from_talon_service >> validation_get_data_talon_service >> \
-        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> validation_copy_data_from_lfs_to_hdfs >> \
-            [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> validation_process_data_and_move_to_s3 >> dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
+        [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> \ 
+            dwh_load_coupons_from_s3 >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
 
