@@ -75,7 +75,8 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                        attributes.Reason as att_backoffice_reason,
                        attributes.AgentId as att_backoffice_user,
                        batchid as batch_id,
-                       attributes.AdvocateId as advocate_id
+                       attributes.AdvocateId as advocate_id,
+                       attributes.OriginalId as original_id
                 from coupons
         '''
         #,attributes.OriginalId as original_id
