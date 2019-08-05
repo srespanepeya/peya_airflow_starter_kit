@@ -41,10 +41,9 @@ def funcion_process_mkt_campaigns(app_args):
         consulta = '''
            select id as id,
                   trim(name) as name,
-                  trim(description) as description,
+                  trim(replace(description,"\\n","")) as description,
                   replace(replace(created, "T"," "),"Z","") as created,
                   replace(replace(updated, "T"," "),"Z","") as updated,
-                  updatedBy as updated_by,
                   replace(replace(lastActivity, "T"," "),"Z","") as last_activity,
                   replace(replace(start, "T"," "),"Z","") as start_time,
                   replace(replace(end, "T"," "),"Z","") as end_time,
@@ -52,7 +51,6 @@ def funcion_process_mkt_campaigns(app_args):
                   couponRedemtionCount as coupon_redemtion_count,
                   refferalRedemtionCount as refferal_redemtion_count,
                   discountCount as discount_count
-
            from campaigns
         '''
         df_campaigns = sqlContext.sql(consulta)
