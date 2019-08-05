@@ -128,7 +128,6 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     # usuario de amazon para Santiago y Nicolas
     # Columnas del ODS, de que archivos vienen... 
 
-    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> \ 
-        [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> dwh_load_coupons_from_s3 >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
+    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> dwh_load_coupons_from_s3 >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
             
 
