@@ -108,7 +108,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     )
 
     dwh_load_campaigns_from_s3 = SSHOperator(
-        task_id="dwh_load_campaigns_from_s3",
+        task_id="dwh_get_campaigns_from_s3",
         command="""
         /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Data/Prueba_Data_Talon_Coupons/Prueba_Data_Talon_Coupons_run.sh
         """,
