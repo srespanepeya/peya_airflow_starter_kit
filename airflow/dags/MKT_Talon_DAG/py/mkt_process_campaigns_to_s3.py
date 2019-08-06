@@ -41,7 +41,7 @@ def funcion_process_mkt_campaigns(app_args):
         consulta = '''
            select id as id,
                   trim(name) as name,
-                  left(trim(replace(replace(description,"\\n"," "),"\"","")),250) as description,
+                  replace(replace(description,"\\n"," "),"\"","") as description,
                   replace(replace(created, "T"," "),"Z","") as created,
                   replace(replace(updated, "T"," "),"Z","") as updated,
                   replace(replace(lastActivity, "T"," "),"Z","") as last_activity,
