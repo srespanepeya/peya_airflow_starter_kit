@@ -107,10 +107,28 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_talend_process_server"
     )
 
+    dwh_load_campaigns_from_s3 = SSHOperator(
+        task_id="dwh_load_campaigns_from_s3",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Data/Prueba_Data_Talon_Coupons/Prueba_Data_Talon_Coupons_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
+
     validation_dwh_load_coupons_from_s3 = SSHOperator(
         task_id = "validation_dwh_load_coupons_from_s3",
         command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "coupons"
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    )
+
+    validation_dwh_load_campaigs_from_s3 = SSHOperator(
+        task_id = "validation_dwh_load_campaigs_from_s3",
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "campaigns"
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
@@ -125,7 +143,6 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_talend_process_server"
     )
 
-
     # sftp://peya@localhost:8001/home/peya/TALEND/TESTING/Vouchers/Fact/Prueba_Fact_Talon_Coupons/Prueba_Fact_Talon_Coupons_run.sh
     # Ver con Carlos en parseo de campos
     # GZIP
@@ -134,4 +151,4 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     # usuario de amazon para Santiago y Nicolas
     # Columnas del ODS, de que archivos vienen... 
 
-    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> dwh_load_coupons_from_s3 >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
+    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
