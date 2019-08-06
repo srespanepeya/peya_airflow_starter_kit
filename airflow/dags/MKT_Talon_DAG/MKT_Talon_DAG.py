@@ -114,7 +114,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_load_campaigns_from_s3 = SSHOperator(
         task_id="dwh_get_campaigns_from_s3",
         command="""
-        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Dim/Prueba_Dim_Talon_Campaigns/Prueba_Dim_Talon_Campaigns.sh
+        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Dim/Prueba_Dim_Talon_Campaigns/Prueba_Dim_Talon_Campaigns_run.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
