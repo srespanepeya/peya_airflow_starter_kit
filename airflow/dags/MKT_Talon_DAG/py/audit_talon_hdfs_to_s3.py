@@ -25,7 +25,7 @@ def auditoria_talon_hdfs_to_s3():
 		sc = SparkContext(conf=conf)
 		sqlContext = SQLContext(sc)
 		entity = app_args.entity
-		df_hdfs = sqlContext.read.parquet('hdfs://hadoop-namenode:9000/entidades/'+entity+'/batch/*.parquet')
+		df_hdfs = sqlContext.read.parquet('hdfs://hadoop-namenode-ti:9000/entidades/'+entity+'/batch/*.parquet')
 		entity_hdfs = df_hdfs.count()
 		df_s3 = sqlContext.read.csv('s3a://peyabi.bigdata/talon/'+entity+'/export/*')
 		entity_s3 = df_s3.count()
