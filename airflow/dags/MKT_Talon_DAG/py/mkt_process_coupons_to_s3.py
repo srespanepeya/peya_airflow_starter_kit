@@ -92,10 +92,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
     except:
         time.sleep(1) #workaround para el bug del thread shutdown
         exit(1)
-<<<<<<< HEAD
         
-=======
->>>>>>> eb6228057f75f578d1df7c2903b7a12267cc3818
 
 def get_app_args():
         parser = argparse.ArgumentParser()
