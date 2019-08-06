@@ -70,6 +70,10 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
+    check_point_1 = DummyOperator(
+        task_id='check_point_1',
+        dag=dag)
+
     process_data_and_move_to_s3_campaigns = BashOperator(
         task_id='process_data_and_move_to_s3_campaigns',
         bash_command="""
@@ -94,8 +98,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         """.format(py_path)
     )
 
-    check_point_1 = DummyOperator(
-        task_id='check_point_1',
+    check_point_2 = DummyOperator(
+        task_id='check_point_2',
         dag=dag)
 
     dwh_load_coupons_from_s3 = SSHOperator(
