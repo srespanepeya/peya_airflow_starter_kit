@@ -47,10 +47,7 @@ def funcion_process_mkt_campaigns(app_args):
                   replace(replace(lastActivity, "T"," "),"Z","") as last_activity,
                   replace(replace(start, "T"," "),"Z","") as start_time,
                   replace(replace(end, "T"," "),"Z","") as end_time,
-                  state as state,
-                  couponRedemtionCount as coupon_redemtion_count,
-                  refferalRedemtionCount as refferal_redemtion_count,
-                  discountCount as discount_count
+                  state as state
            from campaigns
         '''
         df_campaigns = sqlContext.sql(consulta)
