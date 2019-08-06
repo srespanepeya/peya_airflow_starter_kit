@@ -121,7 +121,7 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     )
 
     validation_dwh_load_coupons_and_campaigns_from_s3 = SSHOperator(
-        task_id = "validation_dwh_load_coupons_from_s3",
+        task_id = "validation_dwh_load_coupons_and_campaigns_from_s3",
         command="""
         /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "coupons"
         /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "campaigns"
