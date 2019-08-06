@@ -94,8 +94,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         """.format(py_path)
     )
 
-    check_point = DummyOperator(
-        task_id='check_point',
+    check_point_1 = DummyOperator(
+        task_id='check_point_1',
         dag=dag)
 
     dwh_load_coupons_from_s3 = SSHOperator(
@@ -115,6 +115,10 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
     )
+
+    check_point_2 = DummyOperator(
+        task_id='check_point_2',
+        dag=dag)
 
     validation_dwh_load_coupons_from_s3 = SSHOperator(
         task_id = "validation_dwh_load_coupons_from_s3",
@@ -151,4 +155,4 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     # usuario de amazon para Santiago y Nicolas
     # Columnas del ODS, de que archivos vienen... 
 
-    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
+    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point_1 >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point_2 >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_from_s3 >> dwh_generate_fact_talon_coupons
