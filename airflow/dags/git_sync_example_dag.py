@@ -69,12 +69,9 @@ with DAG('GIT_Sync_DAG', schedule_interval=None, catchup=False, default_args=def
         ),
         retries=0
     )
+    
 
     # Set task downstream
     update_bi_airflow_git_repo >> [slack_error,slack_success]
 
-
-
-    # Set task downstream
-    update_bi_airflow_git_repo 
 
