@@ -9,10 +9,10 @@ from airflow.models import Variable
 import time
 
 default_args = {
-    'owner': 'root',
+    'owner': 'my-squad-name',
     'depends_on_past': False,
     'start_date': datetime(2019, 6, 14),
-    'email': ['bi-producto@pedidosya.com'],
+    'email': ['my-squad-mail@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
     'retries': 20,
