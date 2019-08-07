@@ -22,8 +22,16 @@ try:
 except:
     path_reception_event = "/home/hduser/hdfs/data/solr/SQS/ReceptionEvent" 
 
-usr_solr = string(Variable.get('usr_solr'))
-pass_solr = string(Variable.get('pass_solr'))
+try:
+    usr_solr = string(Variable.get('usr_solr'))
+except:
+    usr_solr = "solr"
+
+try:
+    pass_solr = string(Variable.get('pass_solr'))
+except:
+    pass_solr = ""   
+
 index = "INITIALIZATION"
 
 # Params DAG
