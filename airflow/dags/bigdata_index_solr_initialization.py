@@ -1,20 +1,22 @@
 from builtins import range
 from datetime import datetime, timedelta, date
+import os
+import stat
 import airflow
 from airflow.models import DAG
+from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.contrib.hooks import SSHHook
-
 
 # Variables
 path_reception_event = string(Variable.get('path_reception_event'))
 usr_solr = string(Variable.get('usr_solr'))
 pass_solr = string(Variable.get('pass_solr'))
 index = "INITIALIZATION"
-
 
 # Params DAG
 default_args = {
