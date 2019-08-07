@@ -30,7 +30,7 @@ except:
 try:
     pass_solr = string(Variable.get('pass_solr'))
 except:
-    pass_solr = ""   
+    pass_solr = "H5XZthKmPVzGd"
 
 index = "INITIALIZATION"
 
