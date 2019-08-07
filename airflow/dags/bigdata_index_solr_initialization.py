@@ -33,13 +33,14 @@ with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval=None, catch
     write_index_solr_initialization = SSHOperator(
         task_id="write_index_solr_initialization",
         command="""
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A0 {0} {1} {2} {3}   
+        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A0 {0} {1} {2} {3}
+        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A1 {0} {1} {2} {3}
+        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A2 {0} {1} {2} {3}
+        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A3 {0} {1} {2} {3}
+        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A4 {0} {1} {2} {3}   
         """.format(usr_solr,pass_solr,index,path_reception_event),
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-get_data_from_talon_service    
-
-
-
+get_data_from_talon_service   
