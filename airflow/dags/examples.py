@@ -89,6 +89,18 @@ send_message_to_slack = PythonOperator(
 )    
 
 
+
+
+#Run talend from airflow
+    dwh_generate_fact_talon_coupons = SSHOperator(
+        task_id="dwh_process_fact_talon_coupons",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Fact/Prueba_Fact_Talon_Coupons/Prueba_Fact_Talon_Coupons_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
+
 #BigQueryOperator
 
 
