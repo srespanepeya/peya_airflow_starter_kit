@@ -12,8 +12,16 @@ from airflow.models import Variable
 from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.contrib.hooks import SSHHook
 
+
+
+
 # Variables
-path_reception_event = string(Variable.get('path_reception_event'))
+
+try:
+    path_reception_event = string(Variable.get('path_reception_event'))
+except:
+    path_reception_event = "/home/hduser/hdfs/data/solr/SQS/ReceptionEvent" 
+
 usr_solr = string(Variable.get('usr_solr'))
 pass_solr = string(Variable.get('pass_solr'))
 index = "INITIALIZATION"
