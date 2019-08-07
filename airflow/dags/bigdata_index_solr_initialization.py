@@ -61,4 +61,4 @@ with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval=None, catch
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-get_data_from_talon_service   
+write_index_solr_initialization   
