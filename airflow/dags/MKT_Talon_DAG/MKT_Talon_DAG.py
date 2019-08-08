@@ -130,14 +130,14 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    # dwh_generate_fact_talon_coupons = SSHOperator(
-    #     task_id="dwh_process_fact_talon_coupons",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    dwh_generate_fact_talon_coupons = SSHOperator(
+        task_id="dwh_process_fact_talon_coupons",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
     # dwh_generate_peya_vouchers_daily = SSHOperator(
     #     task_id="dwh_generate_peya_vouchers_daily",
@@ -167,5 +167,5 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
 
     get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point_1 
     check_point_1 >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point_2
-    check_point_2 >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_and_campaigns_from_s3 
-    #>> dwh_generate_fact_talon_coupons    dwh_generate_fact_talon_coupons >> dwh_generate_peya_vouchers_daily >> dwh_generate_tableau_vouchers_talon
+    check_point_2 >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_and_campaigns_from_s3 >> dwh_generate_fact_talon_coupons    
+    #dwh_generate_fact_talon_coupons >> dwh_generate_peya_vouchers_daily >> dwh_generate_tableau_vouchers_talon
