@@ -18,6 +18,7 @@ from pyspark.sql.types import *
 import pandas as pd
 # Se importa la libreria de funciones de Spark SQL
 from pyspark.sql.functions import *
+import pyspark.sql.functions as f
 
 def funcion_load_flat_sessions_to_hdfs(app_args):
     try:
@@ -34,18 +35,16 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         print('<---END READING COUPONS DATA FROM HDFS')
         print('----@>ROW COUNT:{0}'.format(df.count()))
         print('--->START DISCOVERING AND ADJUSTING SCHEMA')
-        df = df.withColumn('attributes', regexp_replace('attributes', "; ","\"\,\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', ": ","\":\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', "\{","\{\""))
-        df = df.withColumn('attributes', regexp_replace('attributes', "}","\"}"))
+        df = df.withColumn('attributes',concat(lit("{"),f.col("attributes"),lit("}")))
+        df = df.withColumn('attributes',regexp_replace('attributes', "\|","\,"))
         df.printSchema()
         att_fields = ['CountryId','CityId','DiscountAmount','UsedAmount','PeyaPays','Title','OrderId','Reason','AgentId','AdvocateId','OriginalId']
         att_schema = sqlContext.read.json(df.rdd.map(lambda row: row.attributes)).schema
         schema_fields = att_schema.fieldNames()
 
-        for f in att_fields:
-                if not f in schema_fields:
-                        print(f,'---@>Adding column {0} because it was missing')
+        for fld in att_fields:
+                if not fld in schema_fields:
+                        print(fld,'---@>Adding column {0} because it was missing')
                         att_schema.add(f, StringType(), True)
 
         df = df.withColumn('attributes', from_json('attributes', att_schema))
