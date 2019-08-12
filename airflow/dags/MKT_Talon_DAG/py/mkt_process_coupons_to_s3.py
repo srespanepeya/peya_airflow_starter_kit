@@ -86,12 +86,14 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         
         df_coupons.show(10,truncate=False)
         #df_coupons.coalesce(1) \
+        print('--->START WRITING DATA ON S3')
         df_coupons.write \
                   .mode ("overwrite") \
                   .format("com.databricks.spark.csv") \
                   .option("encoding", "UTF-8") \
                   .option("codec", "org.apache.hadoop.io.compress.GzipCodec") \
                   .save("s3a://peyabi.bigdata/talon/coupons/export")
+        print('<---END WRITING DATA ON S3')
     except:
         time.sleep(1) #workaround para el bug del thread shutdown
         exit(1)
