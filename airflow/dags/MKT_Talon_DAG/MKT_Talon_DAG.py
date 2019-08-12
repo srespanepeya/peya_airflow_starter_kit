@@ -34,7 +34,7 @@ default_args = {
     'email': ['diego.pietruszka@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
-    'retries': 5,
+    'retries': 20,
     'retry_delay': timedelta(minutes=5)
 }
 
