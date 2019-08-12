@@ -37,6 +37,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         print('--->START DISCOVERING AND ADJUSTING SCHEMA')
         df = df.withColumn('attributes',concat(lit("{"),f.col("attributes"),lit("}")))
         df = df.withColumn('attributes',regexp_replace('attributes', "\|","\,"))
+        df = df.withColumn('attributes',regexp_replace('attributes', "[\.](?=[^\[]*\])","\,"))
         df.printSchema()
         att_fields = ['CountryId','CityId','DiscountAmount','UsedAmount','PeyaPays','Title','OrderId','Reason','AgentId','AdvocateId','OriginalId']
         att_schema = sqlContext.read.json(df.rdd.map(lambda row: row.attributes)).schema
@@ -48,8 +49,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                         att_schema.add(f, StringType(), True)
 
         df = df.withColumn('attributes', from_json('attributes', att_schema))
-        df = df.withColumn('attributes',regexp_replace('attributes', "[\.](?=[^\[]*\])","\,"))
-
+        
         #df.select("attributes").show(10,truncate = False)
         df.printSchema()
         print('<---END DISCOVERING AND ADJUSTING SCHEMA')
