@@ -48,6 +48,7 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
                         att_schema.add(f, StringType(), True)
 
         df = df.withColumn('attributes', from_json('attributes', att_schema))
+        df = df.withColumn('attributes',regexp_replace('attributes', "(\.\s)","\,"))
 
         #df.select("attributes").show(10,truncate = False)
         df.printSchema()
