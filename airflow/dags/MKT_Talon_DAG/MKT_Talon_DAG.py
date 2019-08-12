@@ -102,14 +102,14 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         task_id='check_point_2',
         dag=dag)
 
-    # dwh_load_coupons_from_s3 = SSHOperator(
-    #     task_id="dwh_get_coupons_from_s3",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Data/Data_Talon_Coupons/Data_Talon_Coupons_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    dwh_load_coupons_from_s3 = SSHOperator(
+        task_id="dwh_get_coupons_from_s3",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Data/Data_Talon_Coupons/Data_Talon_Coupons_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
     # dwh_load_campaigns_from_s3 = SSHOperator(
     #     task_id="dwh_get_campaigns_from_s3",
@@ -166,6 +166,6 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     # Columnas del ODS, de que archivos vienen... 
 
     get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point_1 
-    check_point_1 >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point_2
+    check_point_1 >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point_2 >> dwh_load_coupons_from_s3
     #check_point_2 >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_and_campaigns_from_s3 >> dwh_generate_fact_talon_coupons    
     #dwh_generate_fact_talon_coupons >> dwh_generate_peya_vouchers_daily >> dwh_generate_tableau_vouchers_talon
