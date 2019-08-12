@@ -81,11 +81,14 @@ def funcion_load_flat_sessions_to_hdfs(app_args):
         #,attributes.OriginalId as original_id
         df_coupons = sqlContext.sql(consulta)
         df_coupons.printSchema()
+        df_coupons = df_coupons.withColumn('att_backoffice_reason',regexp_replace('att_backoffice_reason', "\"",""))
+        
         df_coupons.show(10,truncate=False)
         #df_coupons.coalesce(1) \
         df_coupons.write \
                   .mode ("overwrite") \
                   .format("com.databricks.spark.csv") \
+                  .option("encoding", "UTF-8") \
                   .option("codec", "org.apache.hadoop.io.compress.GzipCodec") \
                   .save("s3a://peyabi.bigdata/talon/coupons/export")
     except:
