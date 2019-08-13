@@ -70,8 +70,12 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-    check_point_1 = DummyOperator(
-        task_id='check_point_1',
+    check_point_coupons_1 = DummyOperator(
+        task_id='check_point_coupons_1',
+        dag=dag)
+
+    check_point_campaigns_1 = DummyOperator(
+        task_id='check_point_campaigns_1',
         dag=dag)
 
     process_data_and_move_to_s3_campaigns = BashOperator(
@@ -98,8 +102,12 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         """.format(py_path)
     )
 
-    check_point_2 = DummyOperator(
-        task_id='check_point_2',
+    check_point_coupons_2 = DummyOperator(
+        task_id='check_point_coupons_2',
+        dag=dag)
+
+    check_point_campaigns_2 = DummyOperator(
+        task_id='check_point_campaigns_2',
         dag=dag)
 
     dwh_load_coupons_from_s3 = SSHOperator(
@@ -111,61 +119,58 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
         ssh_conn_id = "ssh_talend_process_server"
     )
 
-    # dwh_load_campaigns_from_s3 = SSHOperator(
-    #     task_id="dwh_get_campaigns_from_s3",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Dim/Dim_Talon_Campaigns/Dim_Talon_Campaigns_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    dwh_load_campaigns_from_s3 = SSHOperator(
+        task_id="dwh_get_campaigns_from_s3",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Dim/Dim_Talon_Campaigns/Dim_Talon_Campaigns_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
-    # validation_dwh_load_coupons_and_campaigns_from_s3 = SSHOperator(
-    #     task_id = "validation_dwh_load_coupons_and_campaigns_from_s3",
-    #     command="""
-    #     /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "coupons"
-    #     /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "campaigns"
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_hadoop_datanode1_ti"
-    # )
+    check_point = DummyOperator(
+        task_id='check_point',
+        dag=dag)
 
-    # dwh_generate_fact_talon_coupons = SSHOperator(
-    #     task_id="dwh_process_fact_talon_coupons",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    validation_dwh_load_coupons_and_campaigns_from_s3 = SSHOperator(
+        task_id = "validation_dwh_load_coupons_and_campaigns_from_s3",
+        command="""
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "coupons"
+        /usr/bin/bash /home/hduser/airflow-scripts/audit_talon_s3_to_imports_ods_redshift.sh "campaigns"
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_datanode1_ti"
+    )
 
-    # dwh_generate_peya_vouchers_daily = SSHOperator(
-    #     task_id="dwh_generate_peya_vouchers_daily",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Peya_Vouchers_Daily/Peya_Vouchers_Daily_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    dwh_generate_fact_talon_coupons = SSHOperator(
+        task_id="dwh_process_fact_talon_coupons",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
-    # dwh_generate_tableau_vouchers_talon = SSHOperator(
-    #     task_id="dwh_generate_tableau_vouchers_talon",
-    #     command="""
-    #     /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon_run.sh
-    #     """,
-    #     timeout = 20,
-    #     ssh_conn_id = "ssh_talend_process_server"
-    # )
+    dwh_generate_peya_vouchers_daily = SSHOperator(
+        task_id="dwh_generate_peya_vouchers_daily",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Peya_Vouchers_Daily/Peya_Vouchers_Daily/Peya_Vouchers_Daily_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
-    # sftp://peya@localhost:8001/home/peya/TALEND/TESTING/Vouchers/Fact/Prueba_Fact_Talon_Coupons/Prueba_Fact_Talon_Coupons_run.sh
-    # Ver con Carlos en parseo de campos
-    # GZIP
-    # SH Para los talend, los pasa carlos a Nico --> Willy le explica 
-    # shh credentials, pasamos la clave publica, Diego se la pasa a Carlos
-    # usuario de amazon para Santiago y Nicolas
-    # Columnas del ODS, de que archivos vienen... 
+    dwh_generate_tableau_vouchers_talon = SSHOperator(
+        task_id="dwh_generate_tableau_vouchers_talon",
+        command="""
+        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon_run.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_talend_process_server"
+    )
 
-    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] >> check_point_1 
-    check_point_1 >> [process_data_and_move_to_s3_campaigns,process_data_and_move_to_s3_coupons] >> check_point_2 >> dwh_load_coupons_from_s3
-    #check_point_2 >> [dwh_load_coupons_from_s3,dwh_load_campaigns_from_s3] >> validation_dwh_load_coupons_and_campaigns_from_s3 >> dwh_generate_fact_talon_coupons    
-    #dwh_generate_fact_talon_coupons >> dwh_generate_peya_vouchers_daily >> dwh_generate_tableau_vouchers_talon
+    get_data_from_talon_service >> [copy_data_from_lfs_to_hdfs_campaigns,copy_data_from_lfs_to_hdfs_coupons] 
+    copy_data_from_lfs_to_hdfs_campaigns >> check_point_campaigns_1 >> process_data_and_move_to_s3_campaigns >> check_point_campaigns_2 >> dwh_load_campaigns_from_s3
+    copy_data_from_lfs_to_hdfs_coupons >> check_point_coupons_1 >> process_data_and_move_to_s3_coupons >> check_point_coupons_2 >> dwh_load_coupons_from_s3
+    [dwh_load_campaigns_from_s3,dwh_load_coupons_from_s3] >> check_point >> validation_dwh_load_coupons_and_campaigns_from_s3 >> dwh_generate_fact_talon_coupons >> dwh_generate_peya_vouchers_daily >> dwh_generate_tableau_vouchers_talon
+     
