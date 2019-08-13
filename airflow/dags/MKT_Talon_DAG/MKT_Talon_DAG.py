@@ -113,7 +113,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_load_coupons_from_s3 = SSHOperator(
         task_id="dwh_get_coupons_from_s3",
         command="""
-        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Data/Data_Talon_Coupons/Data_Talon_Coupons_run.sh
+        #--/usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Data/Data_Talon_Coupons/Data_Talon_Coupons_run.--sh
+        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Data/Prueba_Data_Talon_Coupons/Prueba_Data_Talon_Coupons_run.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
@@ -122,7 +123,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_load_campaigns_from_s3 = SSHOperator(
         task_id="dwh_get_campaigns_from_s3",
         command="""
-        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Dim/Dim_Talon_Campaigns/Dim_Talon_Campaigns_run.sh
+        pwd
+        #--/usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Dim/Dim_Talon_Campaigns/Dim_Talon_Campaigns_run.--sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
@@ -145,7 +147,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_generate_fact_talon_coupons = SSHOperator(
         task_id="dwh_process_fact_talon_coupons",
         command="""
-        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.sh
+        #--/usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Fact/Fact_Talon_Coupons/Fact_Talon_Coupons_run.--sh
+        /usr/bin/bash /home/peya/TALEND/TESTING/Vouchers/Fact/Prueba_Fact_Talon_Coupons/Prueba_Fact_Talon_Coupons_run.sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
@@ -154,7 +157,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_generate_peya_vouchers_daily = SSHOperator(
         task_id="dwh_generate_peya_vouchers_daily",
         command="""
-        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Peya_Vouchers_Daily/Peya_Vouchers_Daily/Peya_Vouchers_Daily_run.sh
+        pwd
+        #--/usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Peya_Vouchers_Daily/Peya_Vouchers_Daily/Peya_Vouchers_Daily_run.--sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
@@ -163,7 +167,8 @@ with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=de
     dwh_generate_tableau_vouchers_talon = SSHOperator(
         task_id="dwh_generate_tableau_vouchers_talon",
         command="""
-        /usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon_run.sh
+        pwd
+        #--/usr/bin/bash /home/peya/TALEND/BUILD/PEYA/Peya_Talon/Reports/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon/Tableau_Vouchers_Talon_run.--sh
         """,
         timeout = 20,
         ssh_conn_id = "ssh_talend_process_server"
