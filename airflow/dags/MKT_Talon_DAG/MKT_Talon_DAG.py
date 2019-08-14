@@ -28,17 +28,17 @@ path_coupons_talon = Variable.get('path_coupons_talon') + today_nodash
 
 # Params DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'bi_marketing',
     'depends_on_past': False,
-    'start_date': datetime(2019, 7, 9),
-    'email': ['diego.pietruszka@pedidosya.com'],
+    'start_date': datetime(2019, 8, 14),
+    'email': ['nicolas.alvarezderon@pedidosya.com','santiago.respane@pedidosya.com','diego.pietruszka@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': True,
     'retries': 20,
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=default_args) as dag:
+with DAG('MKT_Talon_DAG', schedule_interval='0 9 * * *', catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     get_data_from_talon_service = SSHOperator(
         task_id="get_data_from_talon_service",
