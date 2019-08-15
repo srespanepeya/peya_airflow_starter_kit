@@ -38,7 +38,7 @@ default_args = {
     'start_date': datetime(2019, 7, 9),
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
-    'email_on_retry': True,
+    'email_on_retry': False,
     'retries': 5,
     'retry_delay': timedelta(seconds=5)
 }
