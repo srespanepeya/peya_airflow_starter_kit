@@ -14,23 +14,6 @@ from airflow.contrib.hooks import SSHHook
 
 # Variables
 
-try:
-    path_reception_event = string(Variable.get('path_reception_event'))
-except:
-    path_reception_event = "/home/hduser/hdfs/data/solr/SQS/ReceptionEvent" 
-
-try:
-    usr_solr = string(Variable.get('usr_solr'))
-except:
-    usr_solr = "solr"
-
-try:
-    pass_solr = string(Variable.get('pass_solr'))
-except:
-    pass_solr = "H5XZthKmPVzGd"
-
-index = "INITIALIZATION"
-
 # Params DAG
 default_args = {
     'owner': 'airflow',
@@ -48,13 +31,9 @@ with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval="* * * * 1-
     write_index_solr_initialization = SSHOperator(
         task_id="write_index_solr_initialization",
         command="""
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A0 {0} {1} {2} {3}
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A1 {0} {1} {2} {3}
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A2 {0} {1} {2} {3}
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A3 {0} {1} {2} {3}
-        /usr/bin/bash /home/hduser/solr/apps/airflow/INDEX_WRITER_MINUTO.sh writer-A4 {0} {1} {2} {3}   
-        """.format(usr_solr,pass_solr,index,path_reception_event),
-        timeout = 20,
+        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/initialization.sh
+        """,
+        timeout = 1600,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
