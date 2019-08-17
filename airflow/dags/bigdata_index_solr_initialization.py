@@ -26,7 +26,7 @@ default_args = {
     'retry_delay': timedelta(minutes=1)
 }
 
-with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval="0 */1 * * *", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval="* * * * 1-7", catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     write_index_solr_initialization = SSHOperator(
         task_id="write_index_solr_initialization",
