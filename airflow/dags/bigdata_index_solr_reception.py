@@ -23,15 +23,15 @@ default_args = {
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 2,
-    'retry_delay': timedelta(seconds=10)
+    'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Writer_Reception_Solr_DAG', schedule_interval="* * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Writer_Reception_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
     write_index_solr_reception = SSHOperator(
         task_id="write_index_solr_reception",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/reception.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/RECEPTION.sh
         """,
         timeout = 1600,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
