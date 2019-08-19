@@ -21,20 +21,20 @@ default_args = {
     'start_date': datetime(2019, 7, 9),
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
-    'email_on_retry': True,
-    'retries': 5,
+    'email_on_retry': False,
+    'retries': 2,
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Writer_Initialization_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Writer_Reception_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
     # Extraccion de datos desde servicio talon
-    write_index_solr_initialization = SSHOperator(
-        task_id="write_index_solr_initialization",
+    write_index_solr_reception = SSHOperator(
+        task_id="write_index_solr_reception",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/initialization.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/RECEPTION.sh
         """,
         timeout = 1600,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
     )
 
-write_index_solr_initialization   
+write_index_solr_reception   
