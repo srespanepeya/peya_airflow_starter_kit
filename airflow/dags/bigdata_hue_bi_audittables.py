@@ -35,7 +35,7 @@ def validate_message():
     # Delta > x 
     print('OK!')
 
-with DAG('BigData_Hue_TablesAudit', schedule_interval='0 */1 * * *', catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Hue_TablesAudit', schedule_interval='0 12,14,16 * * *', catchup=False, default_args=default_args) as dag:
     # Llamado al auditor de tablas de hue
     runHueTableAudit = BashOperator(
     task_id='HueTableAudit',
