@@ -26,7 +26,7 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Writer_Heart_Beat_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Writer_Heart_Beat_Solr_DAG', schedule_interval="*/4 * * * 1-7", catchup=False, default_args=default_args) as dag:
     write_index_solr_heart_beat = SSHOperator(
         task_id="write_index_solr_heart_beat",
         command="""
