@@ -6,10 +6,10 @@ import stat
 import airflow
 import requests
 from airflow.models import DAG
-from airflow.operators.http_operator import SimpleHttpOperator
 from airflow.sensors.http_sensor import HttpSensor
 from airflow.models import Variable
 from airflow.contrib.hooks import SSHHook
+from airflow.operators.python_operator import PythonOperator
 
 # Variables
 
