@@ -24,7 +24,7 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7", catchup=False, default_args=default_args) as dag:
     
     clean_index_solr_acknowledgement = SimpleHttpOperator(
         task_id='post_ack',
