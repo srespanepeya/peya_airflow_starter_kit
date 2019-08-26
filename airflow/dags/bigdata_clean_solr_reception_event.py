@@ -90,4 +90,4 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7
         response_check=lambda response: len(response.json()) == 0,
     )
 
-clean_index_solr_error   
+    clean_index_solr_error   
