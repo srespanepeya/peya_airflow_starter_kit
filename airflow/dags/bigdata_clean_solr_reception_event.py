@@ -26,10 +26,10 @@ default_args = {
 }
 
 def delete_solr_files(**kwargs):
-    print("Collection:" + kwargs['collection'])
-    # defining the api-endpoint
+    print("Collection: " + kwargs['collection'])
+    # definimos endpoint
     API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days=28".format(kwargs['collection'])
-    # sending post request and saving response as response object
+    # enviamos post request
     r = requests.post(url = API_ENDPOINT)
 
 with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7", catchup=False, default_args=default_args) as dag:
