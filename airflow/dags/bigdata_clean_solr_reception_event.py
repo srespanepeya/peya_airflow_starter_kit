@@ -28,7 +28,7 @@ default_args = {
 def delete_solr_files(**kwargs):
     print("Collection:" + kwargs['collection'])
     # defining the api-endpoint
-    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days=29".format(kwargs['collection'])
+    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days=28".format(kwargs['collection'])
     # sending post request and saving response as response object
     r = requests.post(url = API_ENDPOINT)
 
