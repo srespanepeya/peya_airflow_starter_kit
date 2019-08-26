@@ -28,7 +28,8 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7
     
     clean_index_solr_error = SimpleHttpOperator(
         task_id='post_error',
-        endpoint='localhost:9003/api/solr/index/delete?collection=ERROR&days=30',
+        http_default='http://localhost:9003'
+        endpoint='/api/solr/index/delete?collection=ERROR&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
         response_check=lambda response: len(response.json()) == 0,
