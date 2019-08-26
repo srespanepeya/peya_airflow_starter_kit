@@ -26,7 +26,7 @@ default_args = {
 with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
     clean_index_solr_acknowledgement = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_ack',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=ACKNOWLEDGEMENTS&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -34,7 +34,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
     
     clean_index_solr_dispatch = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_dispatch',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=DISPATCH&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -42,7 +42,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     ) 
     
     clean_index_solr_error = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_error',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=ERROR&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -50,7 +50,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
    
     clean_index_solr_heart_beat = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_heart',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=HEART_BEAT&days=7',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -58,7 +58,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
 
     clean_index_solr_initialization = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_init',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=INITIALIZATION&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -66,7 +66,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
 
     clean_index_solr_reception = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_recep',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=RECEPTION&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -74,7 +74,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
 
     clean_index_solr_state_change = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_state',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=STATE_CHANGE&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
@@ -82,7 +82,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="*/2 * * * 1
     )
 
     clean_index_solr_warning = SimpleHttpOperator(
-        task_id='post_op',
+        task_id='post_warn',
         endpoint='http://localhost:9003/api/solr/index/delete?collection=WARNING&days=30',
         data=json.dumps({"priority": 5}),
         headers={"Content-Type": "application/json"},
