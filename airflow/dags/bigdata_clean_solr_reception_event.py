@@ -39,7 +39,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7
         provide_context=True,
         python_callable=delete_solr_files,
         op_kwargs={'collection': 'ERROR'},
-        dag=dag,
+        dag=dag
     )
    
     clean_index_solr_error   
