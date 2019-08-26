@@ -4,6 +4,7 @@ import os
 import json
 import stat
 import airflow
+import requests
 from airflow.models import DAG
 from airflow.operators.http_operator import SimpleHttpOperator
 from airflow.sensors.http_sensor import HttpSensor
@@ -24,15 +25,22 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
+def delete_solr_files(collection):
+    pprint(kwargs)
+    print(ds)
+    # defining the api-endpoint
+    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days=29".format(collection)
+    # sending post request and saving response as response object
+    r = requests.post(url = API_ENDPOINT)
+
 with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7", catchup=False, default_args=default_args) as dag:
-    
-    clean_index_solr_error = SimpleHttpOperator(
-        task_id='post_error',
-        http_default='http://localhost:9003',
-        endpoint='/api/solr/index/delete?collection=ERROR&days=30',
-        data=json.dumps({"priority": 5}),
-        headers={"Content-Type": "application/json"},
-        response_check=lambda response: len(response.json()) == 0,
+
+    clean_index_solr_error = PythonOperator(
+        task_id='clean_index_solr_error',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'ERROR'},
+        dag=dag,
     )
    
     clean_index_solr_error   
