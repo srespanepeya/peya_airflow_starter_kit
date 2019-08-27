@@ -110,4 +110,4 @@ with DAG('BigData_Index_ReceptionEvent_Solr_DAG', schedule_interval="*/3 * * * 1
         dag = dag
     )
 
-dummy >> [ack,dis,err] >> dummy2 >> [ini,rec,state,warn]
+dummy >> [ack,dis,err,ini,rec,state,warn]
