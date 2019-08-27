@@ -30,7 +30,7 @@ with DAG('BigData_Writer_Heart_Beat_Solr_DAG', schedule_interval="*/3 * * * 1-7"
     write_index_solr_heart_beat = SSHOperator(
         task_id="write_index_solr_heart_beat",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/HEART_BEAT.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/HEART_BEAT_MINUTOS.sh
         """,
         timeout = 1600,
         ssh_conn_id = "ssh_hadoop_datanode1_ti"
