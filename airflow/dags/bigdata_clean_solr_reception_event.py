@@ -27,19 +27,76 @@ default_args = {
 
 def delete_solr_files(**kwargs):
     print("Collection: " + kwargs['collection'])
+    print("Collection: " + kwargs['days'])
     # definimos endpoint
-    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days=28".format(kwargs['collection'])
+    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days={1}".format(kwargs['collection'],kwargs['days'])
     # enviamos post request
     r = requests.post(url = API_ENDPOINT)
 
 with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7", catchup=False, default_args=default_args) as dag:
 
-    clean_index_solr_error = PythonOperator(
+    del1 = PythonOperator(
+        task_id='clean_index_solr_ack',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'ACKNOWLEDGEMENTS','days': '30'},
+        dag=dag
+    )
+
+    del2 = PythonOperator(
+        task_id='clean_index_solr_dispatch',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'DISPATCH','days': '30'},
+        dag=dag
+    )
+
+    del3 = PythonOperator(
         task_id='clean_index_solr_error',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'ERROR'},
+        op_kwargs={'collection': 'ERROR','days': '30'},
+        dag=dag
+    )
+
+    del4 = PythonOperator(
+        task_id='clean_index_solr_heartbeat',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'HEART_BEAT','days': '7'},
+        dag=dag
+    )
+
+    del5 = PythonOperator(
+        task_id='clean_index_solr_init',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'INITIALIZATION','days': '30'},
+        dag=dag
+    )
+
+    del6 = PythonOperator(
+        task_id='clean_index_solr_init',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'RECEPTION','days': '30'},
         dag=dag
     )
    
-    clean_index_solr_error   
+    del7 = PythonOperator(
+        task_id='clean_index_solr_state',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'STATE_CHANGE','days': '30'},
+        dag=dag
+    )
+
+    del8 = PythonOperator(
+        task_id='clean_index_solr_warn',
+        provide_context=True,
+        python_callable=delete_solr_files,
+        op_kwargs={'collection': 'WARNING','days': '30'},
+        dag=dag
+    )
+
+    del1 >> del2 >> del3 >> del4 >> del5 >> del6 >> del7 >> del8   
