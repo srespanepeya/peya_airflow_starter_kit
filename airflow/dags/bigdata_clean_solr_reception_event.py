@@ -76,7 +76,7 @@ with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7
     )
 
     del6 = PythonOperator(
-        task_id='clean_index_solr_init',
+        task_id='clean_index_solr_recep',
         provide_context=True,
         python_callable=delete_solr_files,
         op_kwargs={'collection': 'RECEPTION','days': '30'},
