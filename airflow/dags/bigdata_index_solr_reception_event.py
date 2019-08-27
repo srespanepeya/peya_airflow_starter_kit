@@ -26,7 +26,7 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Writer_Acknowledgement_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Reception_Event_Index_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     ack = SSHOperator(
         task_id="write_index_solr_acknowledgement",
         command="""
