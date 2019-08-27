@@ -28,7 +28,7 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Index_Heart_Beat_Worker_Solr_DAG', schedule_interval="*/2 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Index_Heart_Beat_Worker_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
 
     dummy = DummyOperator(
         task_id='dummy_op',
