@@ -14,6 +14,9 @@ from airflow.contrib.hooks import SSHHook
 
 # Variables
 
+#Dummy operator
+from airflow.operators.dummy_operator import DummyOperator
+
 # Params DAG
 default_args = {
     'owner': 'airflow',
@@ -26,7 +29,17 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Reception_Event_Index_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Index_ReceptionEvent_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+    dummy = DummyOperator(
+        task_id='dummy_op',
+        dag=dag
+    )
+    
+    dummy2 = DummyOperator(
+        task_id='dummy_op2',
+        dag=dag
+    )
+
     ack = SSHOperator(
         task_id="write_index_solr_acknowledgement",
         command="""
@@ -97,4 +110,4 @@ with DAG('BigData_Reception_Event_Index_Solr_DAG', schedule_interval="*/3 * * * 
         dag = dag
     )
 
-ack >> dis >> err >> ini >> rec >> state >> warn
+dummy >> [ack,dis,err] >> dummy2 >> [ini,rec,state,warn]
