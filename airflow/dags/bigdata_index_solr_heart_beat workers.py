@@ -30,11 +30,6 @@ default_args = {
 
 with DAG('BigData_Index_Heart_Beat_Worker_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
 
-    dummy = DummyOperator(
-        task_id='dummy_op',
-        dag=dag
-    )
-    
     wr0 = SSHOperator(
         task_id="write_index_solr_heart_beat_wr0",
         command="""
@@ -80,5 +75,3 @@ with DAG('BigData_Index_Heart_Beat_Worker_Solr_DAG', schedule_interval="*/3 * * 
         ssh_conn_id = "ssh_hadoop_datanode1_ti",
         dag=dag
     )
-
-dummy >> [wr0,wr1,wr2,wr3,wr4]   
