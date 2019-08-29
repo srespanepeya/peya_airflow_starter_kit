@@ -20,7 +20,8 @@ from airflow.operators.dummy_operator import DummyOperator
 # Params DAG
 default_args = {
     'owner': 'airflow',
-    'depends_on_past': False,
+    'depends_on_past': True,
+    'wait_for_downstram': True,
     'start_date': datetime(2019, 7, 9),
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
