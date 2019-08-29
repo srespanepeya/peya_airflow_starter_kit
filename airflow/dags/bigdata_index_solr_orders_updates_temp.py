@@ -21,16 +21,8 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Index_Orders_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
-    
-    state = BashOperator(
-        task_id='write_index_solr_ord_state_change',
-        bash_command="""
-            /home/hduser/backendbi-procesos/BigDataOrdersToSolr/StateChange.sh
-            """,
-        dag = dag
-    )
-
+with DAG('BigData_Index_Orders_Solr_DAG_Temp_Updates', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+ 
     update = BashOperator(
         task_id='write_index_solr_ord_update',
         bash_command="""
@@ -38,12 +30,3 @@ with DAG('BigData_Index_Orders_Solr_DAG', schedule_interval="*/3 * * * 1-7", cat
             """,
         dag = dag
     )
-
-    event = BashOperator(
-        task_id='write_index_solr_ord_logistic_events',
-        bash_command="""
-            /home/hduser/backendbi-procesos/BigDataOrdersToSolr/LogisticEvent.sh
-            """,
-        dag = dag
-    )
-
