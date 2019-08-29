@@ -39,8 +39,8 @@ default_args = {
 def delete_solr_files(**kwargs):
     print("Collection: " + kwargs['collection'])
     print("Days: " + kwargs['days'])
-    print("Date Field" + kwargs['dateField'])
-    # definimos endpoint
+    print("Date Field: " + kwargs['dateField'])
+    # definimos request
     API_REQUEST = "{0}{1}/api/solr/index/delete?collection={2}&days={3}&dateField={4}".format(PROTOCOLO, API_ENDPOINT, kwargs['collection'], kwargs['days'], kwargs['dateField'])
     print(API_REQUEST)
     # enviamos post request
