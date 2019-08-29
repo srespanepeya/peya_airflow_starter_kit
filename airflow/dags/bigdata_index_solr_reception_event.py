@@ -30,10 +30,6 @@ default_args = {
 }
 
 with DAG('BigData_Index_ReceptionEvent_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
-    dummy = DummyOperator(
-        task_id='dummy_op',
-        dag=dag
-    )
     
     ack = SSHOperator(
         task_id="write_index_solr_acknowledgement",
@@ -105,4 +101,3 @@ with DAG('BigData_Index_ReceptionEvent_Solr_DAG', schedule_interval="*/3 * * * 1
         dag = dag
     )
 
-dummy >> [ack,dis,err,ini,rec,state,warn]
