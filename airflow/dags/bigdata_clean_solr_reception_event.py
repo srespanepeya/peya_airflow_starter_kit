@@ -12,6 +12,17 @@ from airflow.contrib.hooks import SSHHook
 from airflow.operators.python_operator import PythonOperator
 
 # Variables
+try:
+    API_HOST = Variable.get('bi_api_service_host')
+    API_PORT = Variable.get('bi_api_service_port')
+except:
+    # En caso de fallos, seteamos valores por defecto
+    API_HOST = "10.0.91.124"
+    API_PORT = "9003"
+
+PROTOCOLO = "http://"
+API_ENDPOINT = "{0}:{1}".format(API_HOST, API_PORT)    
+
 
 # Params DAG
 default_args = {
@@ -27,76 +38,78 @@ default_args = {
 
 def delete_solr_files(**kwargs):
     print("Collection: " + kwargs['collection'])
-    print("Collection: " + kwargs['days'])
-    # definimos endpoint
-    API_ENDPOINT = "http://localhost:9003/api/solr/index/delete?collection={0}&days={1}".format(kwargs['collection'],kwargs['days'])
+    print("Days: " + kwargs['days'])
+    print("Date Field: " + kwargs['dateField'])
+    # definimos request
+    API_REQUEST = "{0}{1}/api/solr/index/delete?collection={2}&days={3}&dateField={4}".format(PROTOCOLO, API_ENDPOINT, kwargs['collection'], kwargs['days'], kwargs['dateField'])
+    print(API_REQUEST)
     # enviamos post request
-    r = requests.post(url = API_ENDPOINT)
+    r = requests.post(url = API_REQUEST)
 
 with DAG('BigData_Clean_ReceptionEvent_Solr_DAG', schedule_interval="0 8 * * 1-7", catchup=False, default_args=default_args) as dag:
 
-    del1 = PythonOperator(
+    clean_index_solr_ack = PythonOperator(
         task_id='clean_index_solr_ack',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'ACKNOWLEDGEMENTS','days': '30'},
+        op_kwargs={'collection': 'ACKNOWLEDGEMENTS', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
 
-    del2 = PythonOperator(
+    clean_index_solr_dispatch = PythonOperator(
         task_id='clean_index_solr_dispatch',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'DISPATCH','days': '30'},
+        op_kwargs={'collection': 'DISPATCH', 'dateField': 'dispatchDate', 'days': '30'},
         dag=dag
     )
 
-    del3 = PythonOperator(
+    clean_index_solr_error = PythonOperator(
         task_id='clean_index_solr_error',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'ERROR','days': '30'},
+        op_kwargs={'collection': 'ERROR', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
 
-    del4 = PythonOperator(
+    clean_index_solr_heartbeat = PythonOperator(
         task_id='clean_index_solr_heartbeat',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'HEART_BEAT','days': '7'},
+        op_kwargs={'collection': 'HEART_BEAT', 'dateField': 'timestamp', 'days': '7'},
         dag=dag
     )
 
-    del5 = PythonOperator(
+    clean_index_solr_init = PythonOperator(
         task_id='clean_index_solr_init',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'INITIALIZATION','days': '30'},
+        op_kwargs={'collection': 'INITIALIZATION', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
 
-    del6 = PythonOperator(
+    clean_index_solr_recep = PythonOperator(
         task_id='clean_index_solr_recep',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'RECEPTION','days': '30'},
+        op_kwargs={'collection': 'RECEPTION', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
    
-    del7 = PythonOperator(
-        task_id='clean_index_solr_state',
+    clean_index_solr_state_change = PythonOperator(
+        task_id='clean_index_solr_state_change',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'STATE_CHANGE','days': '30'},
+        op_kwargs={'collection': 'STATE_CHANGE', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
 
-    del8 = PythonOperator(
+    clean_index_solr_warn = PythonOperator(
         task_id='clean_index_solr_warn',
         provide_context=True,
         python_callable=delete_solr_files,
-        op_kwargs={'collection': 'WARNING','days': '30'},
+        op_kwargs={'collection': 'WARNING', 'dateField': 'timestamp', 'days': '30'},
         dag=dag
     )
 
-    del1 >> del2 >> del3 >> del4 >> del5 >> del6 >> del7 >> del8   
+    clean_index_solr_ack >> clean_index_solr_dispatch >> clean_index_solr_error >> clean_index_solr_heartbeat >> clean_index_solr_init >> clean_index_solr_recep >> clean_index_solr_state_change >> clean_index_solr_warn   
