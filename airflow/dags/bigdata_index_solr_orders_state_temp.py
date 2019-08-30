@@ -21,7 +21,7 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Index_Orders_Solr_DAG_Temp_States', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Index_Orders_StChange_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
     state = BashOperator(
         task_id='write_index_solr_ord_state_change',
