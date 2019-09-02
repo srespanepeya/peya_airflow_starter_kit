@@ -24,7 +24,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('MKT_Talon_DAG', schedule_interval=None, catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Solr_To_HDFS', schedule_interval=None, catchup=False, default_args=default_args) as dag:
 
     begin_task = DummyOperator(
         task_id='begin_task',
