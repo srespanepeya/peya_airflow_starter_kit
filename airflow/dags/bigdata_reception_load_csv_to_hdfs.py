@@ -122,4 +122,96 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         task_id='check_point_1',
         dag=dag)
 
-    begin_task >> [extract_acknowledgement,extract_warning,extract_heart_beat,extract_initialization,extract_reception,extract_state_change,extract_dispatch,extract_error] >> check_point_1
+    # Extraccion de datos desde servicio solr
+    write_acknowledgement_hdfs = SSHOperator(
+        task_id="write_acknowledgement_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh acknowledgement
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_warning_hdfs = SSHOperator(
+        task_id="write_warning_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh warning
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_heart_beat_hdfs = SSHOperator(
+        task_id="write_heart_beat_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh heart_beat
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_initialization_hdfs = SSHOperator(
+        task_id="write_initialization_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh initialization
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_reception_hdfs = SSHOperator(
+        task_id="write_reception_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh reception
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_state_change = SSHOperator(
+        task_id="write_state_change_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh state_change
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_dispatch_hdfs = SSHOperator(
+        task_id="write_dispatch_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh dispatch
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    # Extraccion de datos desde servicio solr
+    write_error_hdfs = SSHOperator(
+        task_id="write_error_hdfs",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh error
+        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        """,
+        timeout = 20,
+        ssh_conn_id = "ssh_hadoop_namenode_ti"
+    )
+
+    check_point_2 = DummyOperator(
+        task_id='check_point_2',
+        dag=dag)    
+
+    begin_task >> [extract_acknowledgement,extract_warning,extract_heart_beat,extract_initialization,extract_reception,extract_state_change,extract_dispatch,extract_error] >> check_point_1 >> [write_acknowledgement_hdfs,write_warning_hdfs,write_heart_beat_hdfs,write_initialization_hdfs,write_reception_hdfs,write_state_change_hdfs,write_dispatch_hdfs,write_error_hdfs] >> check_point_2
