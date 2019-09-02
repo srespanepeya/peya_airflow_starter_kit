@@ -14,7 +14,7 @@ from airflow.contrib.hooks import SSHHook
 
 # Params DAG
 default_args = {
-    'owner': 'bi_marketing',
+    'owner': 'bigdata',
     'depends_on_past': False,
     'start_date': datetime(2019, 8, 14),
     'email': ['diego.pietruszka@pedidosya.com'],
@@ -122,4 +122,4 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         task_id='check_point_1',
         dag=dag)
 
-    begin_task >> [extract_acknowledgement,extract_acknowledgement,extract_acknowledgement,extract_acknowledgement,extract_acknowledgement,extract_acknowledgement,extract_acknowledgement,extract_acknowledgement] >> check_point_1
+    begin_task >> [extract_acknowledgement,extract_warning,extract_heart_beat,extract_initialization,extract_reception,extract_state_change,extract_dispatch,extract_error] >> check_point_1
