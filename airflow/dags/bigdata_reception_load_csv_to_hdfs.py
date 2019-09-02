@@ -178,7 +178,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
     )
 
     # Extraccion de datos desde servicio solr
-    write_state_change = SSHOperator(
+    write_state_change_hdfs = SSHOperator(
         task_id="write_state_change_hdfs",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh state_change
