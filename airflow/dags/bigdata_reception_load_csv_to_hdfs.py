@@ -42,7 +42,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         task_id="get_acknowledgement_from_solr_service",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_evento_to_csv.sh acknowledgements timestamp
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.py -e acknowledgements
+        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.py -e acknowledgements
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
