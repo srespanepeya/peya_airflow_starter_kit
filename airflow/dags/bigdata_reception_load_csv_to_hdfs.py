@@ -41,8 +41,8 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
     extract_acknowledgement = SSHOperator(
         task_id="get_acknowledgement_from_solr_service",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh acknowledgements timestamp
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/audit_extract_data_from_solr.sh acknowledgements
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_evento_to_csv.sh acknowledgements timestamp
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.sh acknowledgements
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
@@ -56,8 +56,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
     write_acknowledgement_hdfs = SSHOperator(
         task_id="write_acknowledgement_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/load_event_from_csv_to_hdfs.sh acknowledgement
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh acknowledgements
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
