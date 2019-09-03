@@ -21,8 +21,15 @@ default_args = {
     'email_on_failure': True,
     'email_on_retry': True,
     'retries': 20,
-    'retry_delay': timedelta(minutes=5)
+    'retry_delay': timedelta(minutes=10)
 }
+
+# Variables
+try:
+    dir_csv_reception_events = Variable.get('dir_csv_reception_events')
+except:
+    # En caso de fallos, seteamos valores por defecto
+    dir_csv_reception_events = "/home/hduser/hdfs/data/solr/"
 
 with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False, default_args=default_args) as dag:
 
@@ -34,85 +41,8 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
     extract_acknowledgement = SSHOperator(
         task_id="get_acknowledgement_from_solr_service",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh acknowledgement
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_warning = SSHOperator(
-        task_id="get_warning_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh warning
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_heart_beat = SSHOperator(
-        task_id="get_heart_beat_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh heart_beat
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_initialization = SSHOperator(
-        task_id="get_initialization_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh initialization
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_reception = SSHOperator(
-        task_id="get_reception_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh reception
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_state_change = SSHOperator(
-        task_id="get_state_change_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh state_change
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_dispatch = SSHOperator(
-        task_id="get_dispatch_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh dispatch
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    extract_error = SSHOperator(
-        task_id="get_error_from_solr_service",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh error
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh acknowledgements timestamp
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/audit_extract_data_from_solr.sh acknowledgements
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
@@ -126,84 +56,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
     write_acknowledgement_hdfs = SSHOperator(
         task_id="write_acknowledgement_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh acknowledgement
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_warning_hdfs = SSHOperator(
-        task_id="write_warning_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh warning
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_heart_beat_hdfs = SSHOperator(
-        task_id="write_heart_beat_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh heart_beat
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_initialization_hdfs = SSHOperator(
-        task_id="write_initialization_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh initialization
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_reception_hdfs = SSHOperator(
-        task_id="write_reception_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh reception
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_state_change_hdfs = SSHOperator(
-        task_id="write_state_change_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh state_change
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_dispatch_hdfs = SSHOperator(
-        task_id="write_dispatch_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh dispatch
-        /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
-        """,
-        timeout = 20,
-        ssh_conn_id = "ssh_hadoop_namenode_ti"
-    )
-
-    # Extraccion de datos desde servicio solr
-    write_error_hdfs = SSHOperator(
-        task_id="write_error_hdfs",
-        command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/extract_evento_to_csv.sh error
+        /usr/bin/bash /home/hduser/spark/apps/airflow-scripts/reception/load_event_from_csv_to_hdfs.sh acknowledgement
         /usr/bin/bash /home/hduser/airflow-scripts/audit.sh audit_talon_service.sh
         """,
         timeout = 20,
@@ -214,4 +67,4 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         task_id='check_point_2',
         dag=dag)    
 
-    begin_task >> [extract_acknowledgement,extract_warning,extract_heart_beat,extract_initialization,extract_reception,extract_state_change,extract_dispatch,extract_error] >> check_point_1 >> [write_acknowledgement_hdfs,write_warning_hdfs,write_heart_beat_hdfs,write_initialization_hdfs,write_reception_hdfs,write_state_change_hdfs,write_dispatch_hdfs,write_error_hdfs] >> check_point_2
+    begin_task >> [extract_acknowledgement] >> check_point_1 >> [write_acknowledgement_hdfs] >> check_point_2
