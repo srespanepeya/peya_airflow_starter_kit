@@ -38,25 +38,27 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         dag=dag)
 
     # Extraccion de datos desde servicio solr
-    extract_acknowledgement = SSHOperator(
+    extract_initialization = SSHOperator(
         task_id="get_acknowledgement_from_solr_service",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_evento_to_csv.sh acknowledgements timestamp
-        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.py -e acknowledgements
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.sh initialization
+        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.py -e initialization
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
     )
+
+
 
     check_point_1 = DummyOperator(
         task_id='check_point_1',
         dag=dag)
 
     # Extraccion de datos desde servicio solr
-    write_acknowledgement_hdfs = SSHOperator(
+    write_initialization_hdfs = SSHOperator(
         task_id="write_acknowledgement_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh acknowledgements
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh initialization
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
