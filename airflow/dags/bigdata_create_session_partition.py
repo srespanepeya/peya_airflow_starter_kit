@@ -26,7 +26,7 @@ default_args = {
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
     'email_on_retry': False,
-    'retries': 2,
+    'retries': 3,
     'retry_delay': timedelta(seconds=5)
 }
 
