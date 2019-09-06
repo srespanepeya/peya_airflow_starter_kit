@@ -68,4 +68,4 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
         task_id='check_point_2',
         dag=dag)    
 
-    begin_task >> [extract_acknowledgement] >> check_point_1 >> [write_acknowledgement_hdfs] >> check_point_2
+    begin_task >> [extract_initialization] >> check_point_1 >> [write_initialization_hdfs] >> check_point_2
