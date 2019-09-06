@@ -39,7 +39,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
 
     # Extraccion de datos desde servicio solr
     extract_initialization = SSHOperator(
-        task_id="get_acknowledgement_from_solr_service",
+        task_id="get_initialization_from_solr_service",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.sh initialization
         python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_data_from_solr.py -e initialization
@@ -56,7 +56,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval=None, catchup=False
 
     # Extraccion de datos desde servicio solr
     write_initialization_hdfs = SSHOperator(
-        task_id="write_acknowledgement_hdfs",
+        task_id="write_initialization_hdfs",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh initialization
         """,
