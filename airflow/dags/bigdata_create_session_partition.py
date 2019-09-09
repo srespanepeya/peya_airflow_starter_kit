@@ -12,11 +12,6 @@ from airflow.models import Variable
 from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.contrib.hooks import SSHHook
 
-# Variables
-
-#Dummy operator
-from airflow.operators.dummy_operator import DummyOperator
-
 # Params DAG
 default_args = {
     'owner': 'airflow',
@@ -32,6 +27,46 @@ default_args = {
 
 with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * * 1-7", catchup=False, default_args=default_args) as dag:
     
+    bq_fse_domi= SSHOperator(
+        task_id="flow_session_event_domi_to_alan",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_session_events dhh---global-service-alan alan
+        """,
+        timeout = 60,
+        ssh_conn_id = "ssh_hadoop_namenode_bi",
+        dag = dag
+    )
+
+    bq_fs_domi= SSHOperator(
+         task_id="flow_session_domi_to_alan",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_sessions dhh---global-service-alan alan
+        """,
+        timeout = 60,
+        ssh_conn_id = "ssh_hadoop_namenode_bi",
+        dag = dag
+    )
+
+    bq_fse_peya= SSHOperator(
+         task_id="flow_session_event_peya_to_alan",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_session_events dhh---global-service-alan alan
+        """,
+        timeout = 60,
+        ssh_conn_id = "ssh_hadoop_namenode_bi",
+        dag = dag
+    )
+
+    bq_fs_peya= SSHOperator(
+         task_id="flow_session_peya_to_alan",
+        command="""
+        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_sessions dhh---global-service-alan alan
+        """,
+        timeout = 60,
+        ssh_conn_id = "ssh_hadoop_namenode_bi",
+        dag = dag
+    )
+
     fs = SSHOperator(
         task_id="flow_session_hdfs_to_ods",
         command="""
@@ -62,5 +97,5 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         dag = dag
     )
 
-fs >> fse >> fsc
+bq_fse_domi >> bq_fs_domi >> bq_fse_peya >> bq_fs_peya >> fs >> fse >> fsc
    
