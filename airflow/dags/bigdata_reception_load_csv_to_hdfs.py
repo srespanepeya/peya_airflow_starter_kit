@@ -41,7 +41,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="0 */1 * * *", catc
     extract_reception = SSHOperator(
         task_id="get_reception_from_solr_service",
         command="""
-        python /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.sh -e reception
+        python /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.py -e reception
         python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_event_to_csv.py -e reception
         """,
         timeout = 20,
