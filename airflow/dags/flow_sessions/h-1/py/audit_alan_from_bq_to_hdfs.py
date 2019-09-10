@@ -36,9 +36,9 @@ def audit_alan_from_bq_to_hdfs(app_args):
         if validacion:
             print('VALIDACION OK!')
             print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
-            exit(1)
         else:
             print('VALIDACION NOK!')
+            print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
     except:
         print traceback.format_exc()
 
