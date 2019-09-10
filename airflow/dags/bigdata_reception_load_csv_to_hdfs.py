@@ -59,7 +59,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="2 */1 * * *", catc
         task_id="write_reception_hdfs",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh reception || exit 1
-        python /home/hduser/spark/apps/airflow_scripts/reception/audit_load_from_csv_to_hdfs.py -e reception || exit 1
+        python /home/hduser/spark/apps/airflow_scripts/reception/audit_load_from_csv_to_hdfs.py -e reception
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
