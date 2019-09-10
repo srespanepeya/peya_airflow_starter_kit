@@ -21,7 +21,7 @@ from airflow.operators.dummy_operator import DummyOperator
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'wait_for_downstream': True,
+    'wait_for_downstream': False,
     'start_date': datetime(2019, 7, 9),
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,
@@ -30,15 +30,14 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-with DAG('BigData_Index_ReceptionEvent_Warning_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Index_ReceptionEvent_Error_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
-    warn = SSHOperator(
-        task_id="write_index_solr_warning",
+    err = SSHOperator(
+        task_id="write_index_solr_error",
         command="""
-        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/WARNING.sh
+        /usr/bin/bash /home/hduser/backendbi-procesos/BigDataReceptionEventToSolr/ERROR.sh
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_datanode1_ti",
         dag = dag
     )
-
