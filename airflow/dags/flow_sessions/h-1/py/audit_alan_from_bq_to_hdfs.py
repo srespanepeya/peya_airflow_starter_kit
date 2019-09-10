@@ -30,18 +30,15 @@ def audit_alan_from_bq_to_hdfs(app_args):
         #GET AUDIT FILE
         #fq = urllib.quote('filesystem_folder:('+fq_writers+') AND filesystem_folder:('+fq_hora_minutos+')')
         request = json.load(urllib2.urlopen("http://10.0.91.124:9003/api/count?operator=eq&sourceOrigen=bigquery&projectOrigen=dhh---global-service-alan&schemaOrigen="+app_args.dataset+"&tableNameOrigen="+app_args.tabla+"&dateFieldOrigen="+app_args.datefield+"&dateOrigen="+fecha+"&userDateFunctionOrigen=true&sourceDestino=datalake&schemaDestino=/alan/alan_hc_domicilios_prod&tableNameDestino=flow_session_events&cluster=hadoop-namenode-bi&fileCredentialsBQ=dhh---global-service-alan.json"))
-        if request.status_code == 200:
-            validacion = request['validacion']
-            cantidad_registros_origen = request['cantRegistrosOrigen']
-            cantidad_registros_destino = request['cantRegistrosDestino']
-            if validacion:
-                print('VALIDACION OK!')
-                print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
-                exit(1)
-            else:
-                print('VALIDACION NOK!')
+        validacion = request['validacion']
+        cantidad_registros_origen = request['cantRegistrosOrigen']
+        cantidad_registros_destino = request['cantRegistrosDestino']
+        if validacion:
+            print('VALIDACION OK!')
+            print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
+            exit(1)
         else:
-            print('RESPONSE CODE: ' + str(request.status_code))            
+            print('VALIDACION NOK!')
     except:
         print traceback.format_exc()
 
