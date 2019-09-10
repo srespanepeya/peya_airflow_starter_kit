@@ -31,18 +31,18 @@ except:
     # En caso de fallos, seteamos valores por defecto
     dir_csv_reception_events = "/home/hduser/hdfs/data/solr/"
 
-with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="0 */1 * * *", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="2 */1 * * *", catchup=False, default_args=default_args) as dag:
 
     begin_task = DummyOperator(
         task_id='begin_task',
         dag=dag)
 
     # Extraccion de datos desde servicio solr
-    extract_initialization = SSHOperator(
-        task_id="get_initialization_from_solr_service",
+    extract_reception = SSHOperator(
+        task_id="get_reception_from_solr_service",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.sh initialization
-        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_event_to_csv.py -e initialization
+        python /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.py -e reception || exit 1
+        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_event_to_csv.py -e reception || exit 1
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
@@ -55,11 +55,11 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="0 */1 * * *", catc
         dag=dag)
 
     # Extraccion de datos desde servicio solr
-    write_initialization_hdfs = SSHOperator(
-        task_id="write_initialization_hdfs",
+    write_reception_hdfs = SSHOperator(
+        task_id="write_reception_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh initialization
-        python /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.py -e initialization
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh reception || exit 1
+        python /home/hduser/spark/apps/airflow_scripts/reception/audit_load_from_csv_to_hdfs.py -e reception || exit 1
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
@@ -69,4 +69,4 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="0 */1 * * *", catc
         task_id='check_point_2',
         dag=dag)    
 
-    begin_task >> [extract_initialization] >> check_point_1 >> [write_initialization_hdfs] >> check_point_2
+    begin_task >> [extract_reception] >> check_point_1 >> [write_reception_hdfs] >> check_point_2
