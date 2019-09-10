@@ -31,7 +31,7 @@ except:
     # En caso de fallos, seteamos valores por defecto
     dir_csv_reception_events = "/home/hduser/hdfs/data/solr/"
 
-with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="0 */1 * * *", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="2 */1 * * *", catchup=False, default_args=default_args) as dag:
 
     begin_task = DummyOperator(
         task_id='begin_task',
