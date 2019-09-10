@@ -32,7 +32,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         command="""
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_session_events dhh---global-service-alan alan
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_session_events dhh---global-service-alan alan
-        !!!! Llamar al servicio de diego
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_namenode_bi",
@@ -44,7 +43,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         command="""
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_sessions dhh---global-service-alan alan
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_sessions dhh---global-service-alan alan
-        !!!! Llamar al servicio de diego
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_namenode_bi",
@@ -55,7 +53,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         task_id="flow_session_hdfs_to_ods",
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_peya.sh
-        /usr/bin/bash /home/hduser/spark/apps/alan/validate_flowsessions_alanToods.sh
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
@@ -66,7 +63,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         task_id="flow_session_event_hdfs_to_ods",
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_event_peya.sh
-        /usr/bin/bash /home/hduser/spark/apps/alan/validate_flowsessionevent_alanToods.sh
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
@@ -77,7 +73,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         task_id="flow_session_chat_hdfs_to_ods",
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_chats.sh
-        /usr/bin/bash /home/hduser/spark/apps/alan/validate_flowsessionchat_alanToods.sh
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
