@@ -31,7 +31,7 @@ with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * 
         task_id="flow_session_event_domi_to_alan",
         command="""
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_session_events dhh---global-service-alan alan
-        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_session_events dhh---global-service-alan alan
+        /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_session_events dhh---global-service-alan alan        
         """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_namenode_bi",
