@@ -21,14 +21,20 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
+#casteo la variable obtenida de las Variables generales de airflow para obtener la ruta del repo    
+try:
+    git_path=Variable.get('git_bi_bigdata_path')
+except:
+    git_path='/root/airflow_extra/bigdata-airflow'
+
+#cargo en una variable el sh a ejecutar con el bash con la ruta especifica donde esta en el server
+script=open('{0}/airflow/dags/indexadores_solR/order_state_change/sh/StateChange.sh'.format(git_path),'r').read()
+
 with DAG('BigData_Index_Orders_StChange_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
     state = BashOperator(
         task_id='write_index_solr_ord_state_change',
-        bash_command="""
-            /home/hduser/backendbi-procesos/BigDataOrdersToSolr/StateChange.sh
-            """,
+        bash_command=script,
         dag = dag
     )
-  
 
