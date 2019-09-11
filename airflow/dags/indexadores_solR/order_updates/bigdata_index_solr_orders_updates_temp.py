@@ -23,8 +23,8 @@ default_args = {
 
 #casteo la variable obtenida de las Variables generales de airflow para obtener la ruta del repo    
 try:
-    git_path=string(Variable.get('git_bi_bigdata_path'));
-except expression as identifier:
+    git_path=string(Variable.get('git_bi_bigdata_path'))
+except:
     git_path='/root/airflow_extra/bigdata-airflow'
 
 #cargo en una variable el sh a ejecutar con el bash con la ruta especifica donde esta en el server
