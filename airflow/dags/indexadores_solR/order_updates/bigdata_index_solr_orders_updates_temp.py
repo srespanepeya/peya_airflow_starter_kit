@@ -38,6 +38,3 @@ with DAG('BigData_Index_Orders_Update_Solr_DAG', schedule_interval="*/3 * * * 1-
         dag = dag
     )
 
-#"""
-#/home/hduser/backendbi-procesos/BigDataOrdersToSolr/Update.sh
-#"""

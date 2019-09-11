@@ -37,7 +37,3 @@ with DAG('BigData_Index_Orders_LogEvents_Solr_DAG', schedule_interval="*/3 * * *
         bash_command=script,
         dag = dag
     )
-
-    #"""
-    #/home/hduser/backendbi-procesos/BigDataOrdersToSolr/LogisticEvent.sh
-    #"""
