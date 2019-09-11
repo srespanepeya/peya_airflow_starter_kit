@@ -23,7 +23,7 @@ default_args = {
 
 #casteo la variable obtenida de las Variables generales de airflow para obtener la ruta del repo    
 try:
-    git_path=string(Variable.get('git_bi_bigdata_path'))
+    git_path=Variable.get('git_bi_bigdata_path')
 except:
     git_path='/root/airflow_extra/bigdata-airflow'
 
