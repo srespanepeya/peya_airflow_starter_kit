@@ -41,8 +41,8 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="2 */1 * * *", catc
     extract_reception = SSHOperator(
         task_id="get_reception_from_solr_service",
         command="""
-        python /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.py -e reception || exit 1
-        python /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_event_to_csv.py -e reception || exit 1
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/extract_event_to_csv.sh reception
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/audit_extract_event_to_csv.sh reception
         """,
         timeout = 20,
         ssh_conn_id = "ssh_hadoop_namenode_ti"
@@ -58,7 +58,7 @@ with DAG('BigData_Reception_Solr_To_HDFS', schedule_interval="2 */1 * * *", catc
     write_reception_hdfs = SSHOperator(
         task_id="write_reception_hdfs",
         command="""
-        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh reception || exit 1
+        /usr/bin/bash /home/hduser/spark/apps/airflow_scripts/reception/load_event_from_csv_to_hdfs.sh reception
         python /home/hduser/spark/apps/airflow_scripts/reception/audit_load_from_csv_to_hdfs.py -e reception
         """,
         timeout = 20,
