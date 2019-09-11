@@ -21,15 +21,20 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-#consulta=open('/home/usuario/airflow/dags/ssh/sh/ssh_bash.txt','r').read()
+#casteo la variable obtenida de las Variables generales de airflow para obtener la ruta del repo    
+try:
+    git_path=string(Variable.get('git_bi_bigdata_path'));
+except expression as identifier:
+    git_path='/root/airflow_extra/bigdata-airflow'
+
+#cargo en una variable el sh a ejecutar con el bash con la ruta especifica donde esta en el server
+script=open('{0}/airflow/dags/indexadores_solR/order_logistic_events/sh/LogisticEvent.sh'.format(git_path),'r').read()
 
 with DAG('BigData_Index_Orders_LogEvents_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
     event = BashOperator(
         task_id='write_index_solr_ord_logistic_events',
-        bash_command="""
-            /home/hduser/backendbi-procesos/BigDataOrdersToSolr/LogisticEvent.sh
-            """,
+        bash_command=script,
         dag = dag
     )
 
