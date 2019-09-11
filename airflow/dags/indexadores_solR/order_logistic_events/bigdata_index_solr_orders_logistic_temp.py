@@ -21,6 +21,8 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
+#consulta=open('/home/usuario/airflow/dags/ssh/sh/ssh_bash.txt','r').read()
+
 with DAG('BigData_Index_Orders_LogEvents_Solr_DAG', schedule_interval="*/3 * * * 1-7", catchup=False, default_args=default_args) as dag:
     
     event = BashOperator(
@@ -31,3 +33,6 @@ with DAG('BigData_Index_Orders_LogEvents_Solr_DAG', schedule_interval="*/3 * * *
         dag = dag
     )
 
+    #"""
+    #/home/hduser/backendbi-procesos/BigDataOrdersToSolr/LogisticEvent.sh
+    #"""
