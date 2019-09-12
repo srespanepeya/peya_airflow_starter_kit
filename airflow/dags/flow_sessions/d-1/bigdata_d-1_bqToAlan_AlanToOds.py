@@ -85,16 +85,16 @@ def should_run(**kwargs):
     else:
         return "dia"
 
-#aca debemos llamar al servicio de diego para ver si cierra alan vs ods dia anterior
-cond = BranchPythonOperator(
-    task_id='condition',
-    provide_context=True,
-    python_callable=should_run,
-    dag=dag,
-)
-
 with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1-7", catchup=False, default_args=default_args) as dag:
     
+    #aca debemos llamar al servicio de diego para ver si cierra alan vs ods dia anterior
+    cond = BranchPythonOperator(
+        task_id='condition',
+        provide_context=True,
+        python_callable=should_run,
+        dag=dag
+    )
+
     dia = SSHOperator(
         task_id="session_alan_to_ods",
         command="""
