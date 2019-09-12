@@ -25,8 +25,9 @@ default_args = {
     'retry_delay': timedelta(seconds=5)
 }
 
-today = datetime.datetime.now()
-fecha = today.strftime("%Y%m%d")
+#cargar fecha de ayer
+yesterday = date.today() + timedelta(days=-1)
+ayer = yesterday.strftime("%Y%m%d")
 
 with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */1 * * 1-7", catchup=False, default_args=default_args) as dag:
     
