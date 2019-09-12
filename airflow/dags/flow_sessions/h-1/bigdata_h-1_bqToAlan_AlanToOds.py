@@ -48,7 +48,7 @@ with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_domicilios_prod flow_sessions dhh---global-service-alan alan
         /usr/bin/bash /home/hduser/spark/apps/alan/alan.sh alan_hc_pedidosya_prod flow_sessions dhh---global-service-alan alan
         /usr/bin/bash /home/hduser/spark/apps/alan/audit_alan_from_bq_to_hdfs.sh flow_sessions flow_session_start
-        """,_
+        """,
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_namenode_bi",
         dag = dag
