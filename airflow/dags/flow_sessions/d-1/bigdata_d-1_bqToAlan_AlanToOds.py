@@ -47,9 +47,19 @@ except:
 PROTOCOLO = "http://"
 API_ENDPOINT = "{0}:{1}".format(API_HOST, API_PORT)   
 
+today = datetime.datetime.now()
+fecha = today.strftime("%Y%m%d")
+
 def validateFs(**kwargs):
     # definimos request
-    #API_REQUEST = "{0}{1}/api/solr/index/delete?collection={2}&days={3}&dateField={4}".format(PROTOCOLO, API_ENDPOINT)
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
+    print(API_REQUEST)
+    # enviamos post request
+    r = requests.get(url = API_REQUEST)
+    return r
+
+def validateFs(**kwargs):
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_event&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
@@ -57,15 +67,7 @@ def validateFs(**kwargs):
 
 def validateFs(**kwargs):
         # definimos request
-    #API_REQUEST = "{0}{1}/api/solr/index/delete?collection={2}&days={3}&dateField={4}".format(PROTOCOLO, API_ENDPOINT)
-    print(API_REQUEST)
-    # enviamos post request
-    r = requests.get(url = API_REQUEST)
-    return r
-
-def validateFs(**kwargs):
-        # definimos request
-    #API_REQUEST = "{0}{1}/api/solr/index/delete?collection={2}&days={3}&dateField={4}".format(PROTOCOLO, API_ENDPOINT)
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_chat&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
@@ -73,9 +75,9 @@ def validateFs(**kwargs):
 
 def should_run(**kwargs):
     # definimos request
-    fs_equal = True #validateFs()
-    fse_equal = True #validateFse()
-    fsc_equal = True #validateFsc()
+    fs_equal = validateFs()
+    fse_equal = validateFse()
+    fsc_equal = validateFsc()
     if fs_equal && fse_equal && fsc_equal:
         return "dummy"
     else:
