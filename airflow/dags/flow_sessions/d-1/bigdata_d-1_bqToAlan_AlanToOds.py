@@ -47,19 +47,20 @@ except:
 PROTOCOLO = "http://"
 API_ENDPOINT = "{0}:{1}".format(API_HOST, API_PORT)   
 
-today = datetime.datetime.now()
-fecha = today.strftime("%Y%m%d")
+#cargar fecha de ayer
+yesterday = date.today() + timedelta(days=-1)
+ayer = yesterday.strftime("%Y%m%d")
 
 def validateFs(**kwargs):
     # definimos request
-    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions&date={2}".format(PROTOCOLO, API_ENDPOINT, ayer)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
     return r
 
 def validateFs(**kwargs):
-    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_event&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_event&date={2}".format(PROTOCOLO, API_ENDPOINT, ayer)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
@@ -67,7 +68,7 @@ def validateFs(**kwargs):
 
 def validateFs(**kwargs):
     # definimos request
-    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_chat&date={2}".format(PROTOCOLO, API_ENDPOINT, fecha)
+    API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_chat&date={2}".format(PROTOCOLO, API_ENDPOINT, ayer)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
@@ -90,10 +91,6 @@ cond = BranchPythonOperator(
     python_callable=should_run,
     dag=dag,
 )
-
-#cargar fecha de ayer
-yesterday = date.today() + timedelta(days=-1)
-ayer = yesterday.strftime("%Y%m%d")
 
 with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1-7", catchup=False, default_args=default_args) as dag:
     
