@@ -60,7 +60,7 @@ with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_peya.sh
         /usr/bin/bash /home/hduser/hive/scripts/validate_flow_sessions.sh flow_sessions {0}
-        """.format(fecha),
+        """.format(ayer),
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
         dag = dag
@@ -71,7 +71,7 @@ with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_event_peya.sh
         /usr/bin/bash /home/hduser/hive/scripts/validate_flow_sessions.sh flow_sessions_event {0}
-        """.format(fecha),
+        """.format(ayer),
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
         dag = dag
@@ -82,7 +82,7 @@ with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */
         command="""
         /usr/bin/bash /home/hduser/hive/scripts/create_table_alan_flow_sessions_chats.sh
         /usr/bin/bash /home/hduser/hive/scripts/validate_flow_sessions.sh flow_sessions_chat {0} 
-        """.format(fecha),
+        """.format(ayer),
         timeout = 60,
         ssh_conn_id = "ssh_hadoop_resmanager_bi",
         dag = dag
