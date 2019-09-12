@@ -78,7 +78,7 @@ def should_run(**kwargs):
     fs_equal = validateFs()
     fse_equal = validateFse()
     fsc_equal = validateFsc()
-    if fs_equal && fse_equal && fsc_equal:
+    if fs_equal and fse_equal and fsc_equal:
         return "dummy"
     else:
         return "dia"
