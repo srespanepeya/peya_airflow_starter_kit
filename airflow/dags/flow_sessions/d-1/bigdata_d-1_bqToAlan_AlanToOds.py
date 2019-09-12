@@ -8,6 +8,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python_operator import BranchPythonOperator
 from airflow.models import Variable
 from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.contrib.hooks import SSHHook
