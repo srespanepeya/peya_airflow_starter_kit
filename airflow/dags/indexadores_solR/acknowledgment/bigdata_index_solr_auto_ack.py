@@ -21,7 +21,7 @@ from airflow.operators.dummy_operator import DummyOperator
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'wait_for_downstream': True,
+    'wait_for_downstream': False,
     'start_date': datetime(2019, 7, 9),
     'email': ['diego.pietruszka@pedidosya.com','carlos.cristoforone@pedidosya.com'],
     'email_on_failure': True,

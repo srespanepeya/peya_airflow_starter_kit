@@ -29,16 +29,21 @@ def audit_alan_from_bq_to_hdfs(app_args):
 
         #GET AUDIT FILE
         #fq = urllib.quote('filesystem_folder:('+fq_writers+') AND filesystem_folder:('+fq_hora_minutos+')')
-        request = json.load(urllib2.urlopen("http://10.0.91.124:9003/api/count?operator=eq&sourceOrigen=bigquery&projectOrigen=dhh---global-service-alan&schemaOrigen="+app_args.dataset+"&tableNameOrigen="+app_args.tabla+"&dateFieldOrigen="+app_args.datefield+"&dateOrigen="+fecha+"&useDateFunctionOrigen=true&sourceDestino=datalake&schemaDestino=/alan/alan_hc_domicilios_prod&tableNameDestino=flow_session_events&cluster=hadoop-namenode-bi&fileCredentialsBQ=dhh---global-service-alan.json"))
-        validacion = request['validacion']
-        cantidad_registros_origen = request['cantRegistrosOrigen']
-        cantidad_registros_destino = request['cantRegistrosDestino']
-        if validacion:
+        tableNameOrigen = app_args.tabla
+        req1= "http://10.0.91.124:9003/api/count?operator=eq&sourceOrigen=bigquery&projectOrigen=dhh---global-service-alan&schemaOrigen=alan_hc_domicilios_prod&tableNameOrigen="+tableNameOrigen+"&dateFieldOrigen="+app_args.datefield+"&dateOrigen="+fecha+"&useDateFunctionOrigen=true&sourceDestino=datalake&schemaDestino=/alan/alan_hc_domicilios_prod&tableNameDestino=" + tableNameOrigen + "&cluster=hadoop-namenode-bi&fileCredentialsBQ=dhh---global-service-alan.json"
+        req2="http://10.0.91.124:9003/api/count?operator=eq&sourceOrigen=bigquery&projectOrigen=dhh---global-service-alan&schemaOrigen=alan_hc_pedidosya_prod&tableNameOrigen="+tableNameOrigen+"&dateFieldOrigen="+app_args.datefield+"&dateOrigen="+fecha+"&useDateFunctionOrigen=true&sourceDestino=datalake&schemaDestino=/alan/alan_hc_pedidosya_prod&tableNameDestino=" + tableNameOrigen + "&cluster=hadoop-namenode-bi&fileCredentialsBQ=dhh---global-service-alan.json"
+        request1 = json.load(urllib2.urlopen(req1))
+        request2 = json.load(urllib2.urlopen(req2))
+        
+        cantidad_registros_origen = request1['cantRegistrosOrigen'] + request2['cantRegistrosOrigen']
+        cantidad_registros_destino = request1['cantRegistrosDestino'] + request2['cantRegistrosDestino']
+        if cantidad_registros_origen==cantidad_registros_destino:
             print('VALIDACION OK!')
             print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
         else:
             print('VALIDACION NOK!')
             print('CANTIDAD REGISTROS BIGQUERY: ' + str(cantidad_registros_origen) + ' CANTIDAD REGISTROS HDFS: ' + str(cantidad_registros_destino))
+            exit(1)
     except:
         print traceback.format_exc()
 
