@@ -28,7 +28,7 @@ default_args = {
 today = datetime.datetime.now()
 fecha = today.strftime("%Y%m%d")
 
-with DAG('BigData_Flow_Session_Related_Hdfs_To_Ods', schedule_interval="0 */1 * * 1-7", catchup=False, default_args=default_args) as dag:
+with DAG('BigData_Flow_Session_Related_BigQuery_To_Ods', schedule_interval="0 */1 * * 1-7", catchup=False, default_args=default_args) as dag:
     
     bq_hdfs_fse = SSHOperator(
         task_id="flow_session_event_domi_to_alan",
