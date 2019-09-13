@@ -61,14 +61,14 @@ def validateFs(**kwargs):
     r = requests.get(url = API_REQUEST)
     return r
 
-def validateFs(**kwargs):
+def validateFse(**kwargs):
     API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_event&date={2}".format(PROTOCOLO, API_ENDPOINT, ayer)
     print(API_REQUEST)
     # enviamos post request
     r = requests.get(url = API_REQUEST)
     return r
 
-def validateFs(**kwargs):
+def validateFsc(**kwargs):
     # definimos request
     API_REQUEST = "{0}{1}/api/hive/validate/flow_sessions?tableName=flow_sessions_chat&date={2}".format(PROTOCOLO, API_ENDPOINT, ayer)
     print(API_REQUEST)
