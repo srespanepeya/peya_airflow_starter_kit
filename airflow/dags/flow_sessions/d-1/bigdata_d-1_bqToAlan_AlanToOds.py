@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, date
 import os
 import stat
 import airflow
+import requests
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
