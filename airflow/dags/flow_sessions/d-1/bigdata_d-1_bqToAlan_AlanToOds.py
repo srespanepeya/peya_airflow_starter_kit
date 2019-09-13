@@ -120,5 +120,6 @@ with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1
         dag=dag
 )
 
-cond >> [dia,dummy] >> s3
-   
+cond >> [dia,dummy]
+dia >> s3
+dummy >> s3
