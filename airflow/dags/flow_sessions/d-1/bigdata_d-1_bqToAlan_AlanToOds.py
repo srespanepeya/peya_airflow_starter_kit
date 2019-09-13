@@ -109,6 +109,7 @@ with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1
     )
 
     dummy = DummyOperator(task_id='dummy', dag=dag)
+    join = DummyOperator(task_id='join', dag=dag)
     
     s3 = BashOperator(
         task_id='process_data_and_move_to_s3_fs',
@@ -121,5 +122,5 @@ with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1
 )
 
 cond >> [dia,dummy]
-dia >> s3
-dummy >> s3
+dia >> s3 >> join
+dummy >> s3 >> join
