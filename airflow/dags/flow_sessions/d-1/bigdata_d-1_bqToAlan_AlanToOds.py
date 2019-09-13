@@ -113,6 +113,7 @@ with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1
     
     s3 = BashOperator(
         task_id='process_data_and_move_to_s3_fs',
+        trigger_rule='none_failed',
         bash_command="""
         echo "--->Begin BATCH Flow sessions"
         chmod 755 {0}/fs_from_hdfs_to_s3.py
@@ -121,6 +122,4 @@ with DAG('BigData_Flow_Session_Related_Hdfs_to_S3', schedule_interval="0 7 * * 1
         dag=dag
 )
 
-cond >> [dia,dummy]
-dia >> s3 >> join
-dummy >> s3 >> join
+cond >> [dia,dummy] >> s3
